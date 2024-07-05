@@ -91,6 +91,7 @@ export const useJobStore = defineStore('job', {
 
 
     async createJob(data) {
+      this.loading = true;
       try {
         const accountStore = useAccountStore();
         const token = accountStore.token;
@@ -108,9 +109,14 @@ export const useJobStore = defineStore('job', {
         }
         const responseData = await response.json();
         console.log('The received data is:', responseData )
+        this.jobs.push(responseData)
+
+        await this.fetchJobs()
       } catch (error) {
         console.error('Error submitting form:', error);
         this.error = error;
+      } finally {
+        this.loading = false
       }
     },
 

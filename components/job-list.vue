@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="loading" class="text-center my-4">Loading...</div>
+    <div v-if="loading" class="text-center my-4"><spinner size="lg" :fullScreen="true" /></div>
     <div v-else-if="error" class="text-center my-4 text-red-500">{{ error }}</div>
     <div v-else-if="jobs.length === 0" class="text-center my-4">No jobs found.</div>
     <div v-else>
@@ -51,6 +51,7 @@
         </div>
       </UCard>
       <UButton v-if="hasMoreItems" @click="incrementItemsPerPage">Show more</UButton>
+      
     </div>
   </div>
 </template>

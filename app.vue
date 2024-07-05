@@ -22,6 +22,7 @@ onMounted(() => {
     <NuxtPage />
     <DarkFooter />
   </div>
+  <UNotifications />
 </template>
 
 <script setup>

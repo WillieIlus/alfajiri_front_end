@@ -17,14 +17,13 @@
           <div class="flex flex-col sm:flex-row items-center gap-2">
             <div v-if="isLoggedIn">
               <span class="px-4">Hi {{ user?.first_name || 'user' }}</span>
-              <UButton size="md" icon="i-heroicons-lock-open" variant="outline" label="logout" to="/logout" />
+              <span>
+              <Logout />
+              </span>
             </div>
             <div v-else>
               <UButton size="md" icon="i-heroicons-user" label="signup" />
               <UButton size="md" icon="i-heroicons-lock-closed" variant="outline" label="login" to="/login" />
-            </div>
-            <div v-if="isLoggedIn">
-              <UButton size="md"  label="Add Job" to="/jobs/add" />
             </div>
             <USelect class="inline-block" v-model="$colorMode.preference" :options="['light', 'dark']" />
           </div>

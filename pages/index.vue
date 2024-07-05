@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Hero />
+    <!-- <Hero /> -->
     <SearchFilter />
     <CustomContainer>
       <AddJob @jobCreated="fetchJobs" />
@@ -11,6 +11,7 @@
       @incrementItemsPerPage="incrementItemsPerPage"
       />
     </CustomContainer>
+    
   </div>
 </template>
 

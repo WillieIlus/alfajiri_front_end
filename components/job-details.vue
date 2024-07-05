@@ -1,6 +1,6 @@
 <template>
   <div v-if="loading">
-    loading ...
+    <spinner size="lg" :fullScreen="true" />
   </div>
   <div v-else-if="error">
     error ...
