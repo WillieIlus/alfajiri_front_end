@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div v-if="loading" class="text-center my-4"><spinner size="lg" :fullScreen="true" /></div>
+    <div v-if="loading" class="text-center my-4">
+      <spinner size="lg" :fullScreen="true" />
+    </div>
     <div v-else-if="error" class="text-center my-4 text-red-500">{{ error }}</div>
     <div v-else-if="jobs.length === 0" class="text-center my-4">No jobs found.</div>
     <div v-else>
@@ -29,7 +31,8 @@
                     <UIcon name="i-heroicons-adjustments-horizontal" class="pr-1" />{{ job?.get_category || ' ' }}
                   </span>
                   <span class="flex items-center px-2">
-                    <UIcon name="i-heroicons-map-pin" class="pr-1" />{{ job?.address || '' }}, {{ job?.get_location || ' ' }}
+                    <UIcon name="i-heroicons-map-pin" class="pr-1" />
+                    {{ (job?.address || '') + ', ' + (job?.get_location || ' ') }}
                   </span>
                   <span class="flex items-center px-2">
                     <UIcon name="i-heroicons-eye" class="pr-1" /> {{ job?.view_count || '' }}
@@ -41,24 +44,21 @@
               </div>
             </div>
 
-            <div class="text-gray-700 dark:text-gray-300">
-              <p>
-                {{ job?.truncated_description || ' ' }}
-              </p>
+            <div class="text-gray-700 dark:text-gray-300 prose max-w-none dark:prose-invert">
+              <p v-html="job?.truncated_description || '&nbsp;'"></p>
             </div>
 
           </div>
         </div>
       </UCard>
       <UButton v-if="hasMoreItems" @click="incrementItemsPerPage">Show more</UButton>
-      
+
     </div>
   </div>
 </template>
 
 <script setup>
 import { defineProps, defineEmits } from 'vue';
-
 
 const props = defineProps({
   jobs: {

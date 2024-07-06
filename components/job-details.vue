@@ -15,9 +15,9 @@
     <UCard class="d bg-white dark:bg-gray-800 rounded-lg shadow-lg">
       <h1 class="font-semibold text-2xl py-2 text-gray-900 dark:text-gray-100"> Job Description </h1>
 
-      <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-        {{ job?.description || "Not Specified" }}
-      </p>
+      <div class="prose max-w-none dark:prose-invert text-gray-800 dark:text-gray-200 text-sm leading-relaxed"
+        v-html="job?.description || '&nbsp;'"></div>
+
     </UCard>
   </div>
 </template>

@@ -11,6 +11,7 @@
           <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-wrap gap-4 items-center">
             <UFormGroup class="flex-auto" size="xl" name="company" label="Company">
               <UInputMenu v-model="state.company" :options="companyOptions" />
+              <!-- <UInputMenu v-model="state.company" :options="companyOptions" option-attribute="name" value-attribute="id" /> -->
             </UFormGroup>
             <UButton class="mt-6 min-w-4 max-w-12 max-h-12 min-h-4" icon="i-heroicons-plus" size="sm" color="primary"
               :ui="{ rounded: 'rounded-full' }" variant="solid" @click="openModal('company')" />
@@ -35,7 +36,7 @@
         <UFormGroup name="description" label="Description">
           <!-- <UTextarea v-model="state.description" /> -->
           <TiptapEditor ref="tiptapEditor" :modelValue="state.description"
-            @update:modelValue="(newValue) => state.description = newValue" placeholder="Enter job description"/>
+            @update:modelValue="(newValue) => state.description = newValue" placeholder="Enter job description" />
         </UFormGroup>
 
         <UButton type="submit" :disabled="submitting">Submit</UButton>
@@ -125,14 +126,16 @@ const companyOptions = computed(() => {
 const categoryOptions = computed(() => {
   return (categories.value || []).map(category => ({
     label: category.name,
-    value: category.id
+    value: category.id,
+    name: category.name
   }));
 });
 
 const locationOptions = computed(() => {
   return (locations.value || []).map(location => ({
     label: location.name,
-    value: location.id
+    value: location.id,
+    name: location.name
   }));
 });
 
@@ -178,7 +181,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   try {
     const formData = new FormData()
     formData.append('title', data.title)
-    formData.append('company', data.company)
+    formData.append('company', data.company.toString())
     formData.append('category', data.category)
     formData.append('location', data.location)
     formData.append('description', data.description)
@@ -186,6 +189,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     await jobStore.createJob(formData)
     successMessage.value = 'Job vacancy added successfully!'
     console.log('The finally submitted company ID:', data.company)
+    console.log('Selected company1:', state.value.company)
     errorMessage.value = ''
     toast.add({ title: successMessage.value, type: 'success' })
     state.value = {
@@ -204,10 +208,12 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
     emit('jobCreated')
   } catch (error) {
+    console.log('Selected company2:', state.value.company)
     successMessage.value = ''
     errorMessage.value = 'Failed to add job vacancy.'
     toast.add({ title: errorMessage.value, type: 'error' })
   } finally {
+    console.log('Selected company finally:', state.value.company)
     submitting.value = false
     successMessage.value = ''
     errorMessage.value = ''
