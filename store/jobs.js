@@ -89,7 +89,6 @@ export const useJobStore = defineStore('job', {
       });
     },
 
-
     async createJob(data) {
       this.loading = true;
       try {
@@ -110,7 +109,7 @@ export const useJobStore = defineStore('job', {
         const responseData = await response.json();
         console.log('The received data is:', responseData )
         this.jobs.push(responseData)
-
+    
         await this.fetchJobs()
       } catch (error) {
         console.error('Error submitting form:', error);
@@ -119,7 +118,7 @@ export const useJobStore = defineStore('job', {
         this.loading = false
       }
     },
-
+    
     async updateJob(slug, job) {
       this.loading = true;
       const accountStore = useAccountStore();
