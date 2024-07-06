@@ -34,8 +34,7 @@
 
         <UFormGroup name="description" label="Description">
           <!-- <UTextarea v-model="state.description" /> -->
-          <TiptapEditor ref="tiptapEditor" :modelValue="state.description"
-            @update:modelValue="(newValue) => state.description = newValue" placeholder="Enter job description"/>
+          <TiptapEditor v-model="state.description" />
         </UFormGroup>
 
         <UButton type="submit" :disabled="submitting">Submit</UButton>
@@ -136,8 +135,6 @@ const locationOptions = computed(() => {
   }));
 });
 
-const tiptapEditor = ref(null)
-
 const state = ref({
   company: null,
   category: null,
@@ -195,13 +192,6 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       title: '',
       description: '',
     };
-
-    showDetails.value = false
-
-    if (tiptapEditor.value && tiptapEditor.value.editor) {
-      tiptapEditor.value.editor.commands.clearContent()
-    }
-
     emit('jobCreated')
   } catch (error) {
     successMessage.value = ''
@@ -211,16 +201,12 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     submitting.value = false
     successMessage.value = ''
     errorMessage.value = ''
-    showDetails.value = false
   }
 }
 
 const clearForm = () => {
   form.value.reset()
   showDetails.value = false
-  if (tiptapEditor.value && tiptapEditor.value.editor) {
-    tiptapEditor.value.editor.commands.clearContent()
-  }
 }
 
 const handleCompanyAdded = (newCompany) => {

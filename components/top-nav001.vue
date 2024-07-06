@@ -2,12 +2,13 @@
   <div :class="['top-nav', { 'scrolled': isScrolled }]" :style="navStyle">
     <CustomContainer class="w-full">
       <div>
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between">
           <div class="font-semibold text-lg">
             Jadrian
           </div>
-          <div class="flex flex-1 justify-center items-center mx-4">
-            <UInput class="w-full" icon="i-heroicons-magnifying-glass-20-solid" size="xl" color="white" trailing placeholder="Search for jobs..." />
+          <div class="hidden sm:flex justify-center items-center">
+            <UInput icon="i-heroicons-magnifying-glass-20-solid" size="xl" color="white" trailing
+              placeholder="Search for jobs..." />
           </div>
           <!-- user menu -->
           <div class="flex flex-col sm:flex-row items-center gap-2">
@@ -18,7 +19,7 @@
               </span>
             </div>
             <div v-else>
-              <UButton size="md" icon="i-heroicons-user" label="signup" class="pr-2" />
+              <UButton size="md" icon="i-heroicons-user" label="signup" />
               <UButton size="md" icon="i-heroicons-lock-closed" variant="outline" label="login" to="/login" />
             </div>
             <USelect class="inline-block" v-model="$colorMode.preference" :options="['light', 'dark']" />

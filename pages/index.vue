@@ -1,17 +1,24 @@
 <template>
   <div>
-    <!-- <Hero /> -->
-    <SearchFilter />
+    <Hero />
     <CustomContainer>
-      <AddJob @jobCreated="fetchJobs" />
+      <div class="flex gap-[28px]">
+        <div class="w-1/4">
+          <Filters /><TiptapEditor/>
+        </div>
+        <div class="w-3/4">
+          <AddJob @jobCreated="fetchJobs" />
+          <JobList 
+            :jobs="paginatedJobs" 
+            :loading="loading" 
+            :error="error" 
+            :hasMoreItems="hasMoreItems" 
+            @incrementItemsPerPage="incrementItemsPerPage" 
+          />
+        </div>
+        </div>
     </CustomContainer>
-    <CustomContainer>
-      <JobList :jobs="paginatedJobs" :loading="loading" :error="error" 
-      :hasMoreItems="hasMoreItems"
-      @incrementItemsPerPage="incrementItemsPerPage"
-      />
-    </CustomContainer>
-    
+
   </div>
 </template>
 
@@ -25,15 +32,15 @@ import { storeToRefs } from 'pinia'
 const categoryStore = useCategoryStore()
 const locationStore = useLocationStore()
 const jobStore = useJobStore()
-const { jobs, loading, error, paginatedJobs } = storeToRefs(jobStore)
+const { loading, error, paginatedJobs, totalPages, currentPage } = storeToRefs(jobStore)
 
 const incrementItemsPerPage = () => {
-  jobStore.itemsPerPage += 10
-}
+  jobStore.itemsPerPage += 10;
+};
 
 const hasMoreItems = computed(() => {
-  return jobStore.itemsPerPage < jobStore.totalJobs
-})
+  return jobStore.itemsPerPage < jobStore.totaljobs;
+});
 
 const fetchJobs = async () => {
   await jobStore.fetchJobs()

@@ -23,6 +23,7 @@ onMounted(() => {
     <DarkFooter />
   </div>
   <UNotifications />
+  <UModals />
 </template>
 
 <script setup>
