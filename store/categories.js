@@ -1,3 +1,4 @@
+// store/category.js
 import { defineStore } from 'pinia'
 import { BASE_URL } from './base'
 import { useAccountStore } from './accounts'
@@ -30,7 +31,8 @@ export const useCategoryStore = defineStore('category', {
         const data = await response.json();
         this.categories = data;
       } catch (error) {
-        console.error(error);
+        console.error('Fetch Categories Error:', error);
+        this.error = error.message;
       } finally {
         this.loading = false;
       }
@@ -42,40 +44,39 @@ export const useCategoryStore = defineStore('category', {
         const data = await response.json();
         this.category = data;
       } catch (error) {
-        console.error(error);
+        console.error('Fetch Category Error:', error);
+        this.error = error.message;
       } finally {
         this.loading = false;
       }
     },
-
-    async createCategory(name, description) {
+    async createCategory(formData) { // Accepting FormData as parameter
       this.loading = true;
-      const accountStore = useAccountStore()
+      const accountStore = useAccountStore();
       try {
         const response = await fetch(`${BASE_URL}/categories/`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accountStore.token}`
+            'Authorization': `Bearer ${accountStore.token}`,
           },
-          body: JSON.stringify({ name, description }),
+          body: formData,
         });
         if (!response.ok) {
           const errorData = await response.json();
           console.error('Bad Request Error:', errorData);
-          const error = new Error(errorData.detail);
-          throw error;
+          throw new Error(errorData.detail || 'Failed to create category');
         }
         const data = await response.json();
-        this.categories.push(data);
+        this.categories.push(data); // Push new category to the list
       } catch (error) {
-        console.error(error);
+        console.error('Create Category Error:', error);
         this.error = error.message;
       } finally {
         this.loading = false;
       }
     },
     async updateCategory(slug, category) {
+      this.loading = true;
       try {
         const response = await fetch(`${BASE_URL}/categories/${slug}`, {
           method: 'PUT',
@@ -83,15 +84,9 @@ export const useCategoryStore = defineStore('category', {
           body: JSON.stringify(category),
         });
         const data = await response.json();
-        this.categories = this.categories.map((category) => {
-          if (category.slug === slug) {
-            return data;
-          }
-          return category;
-        });
-      }
-      catch (error) {
-        console.error(error);
+        this.categories = this.categories.map((cat) => (cat.slug === slug ? data : cat));
+      } catch (error) {
+        console.error('Update Category Error:', error);
         this.error = error.message;
       } finally {
         this.loading = false;
@@ -101,6 +96,5 @@ export const useCategoryStore = defineStore('category', {
       const totalPages = Math.ceil(this.categories.length / this.itemsPerPage);
       this.currentPage = Math.max(1, Math.min(totalPages, page));
     },
-  }
-})
-
+  },
+});

@@ -18,7 +18,6 @@
         </div>
         </div>
     </CustomContainer>
-
   </div>
 </template>
 

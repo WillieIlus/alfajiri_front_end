@@ -22,7 +22,6 @@
             <UButton class="mt-6 min-w-4 max-w-12 max-h-12 min-h-4" icon="i-heroicons-plus" size="sm" color="primary"
               :ui="{ rounded: 'rounded-full' }" variant="solid" @click="openModal('category')" />
           </div>
-
           <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-wrap gap-4 items-center">
             <UFormGroup class="flex-auto" size="xl" name="location" label="Location">
               <UInputMenu v-model="state.location" :options="locationOptions" />
@@ -33,7 +32,6 @@
         </div>
 
         <UFormGroup name="description" label="Description">
-          <!-- <UTextarea v-model="state.description" /> -->
           <TiptapEditor ref="tiptapEditor" :modelValue="state.description"
             @update:modelValue="(newValue) => state.description = newValue" />
         </UFormGroup>
@@ -58,7 +56,6 @@
       <LocationForm v-else-if="activeModal === 'location'" @location-added="handleLocationAdded" />
     </UCard>
   </UModal>
-  <!-- end modal  -->
 </template>
 
 <script setup lang="ts">
@@ -178,12 +175,12 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
   const { data } = event
   try {
-    console.log('Form data:', data);  // Log the entire form data for debugging
+    console.log('Form data:', data);
     const formData = new FormData()
     formData.append('title', data.title)
-    formData.append('company', parseInt(data.company.value, 10))  // Ensure it's an integer
-    formData.append('category', parseInt(data.category.value, 10))  // Ensure it's an integer
-    formData.append('location', parseInt(data.location.value, 10))  // Ensure it's an integer
+    formData.append('company', data.company.value.toString())
+    formData.append('category', data.category.value.toString())
+    formData.append('location', data.location.value.toString())
     formData.append('description', data.description)
 
     console.log('FormData content:');
@@ -230,19 +227,19 @@ const clearForm = () => {
 const handleCompanyAdded = (newCompany) => {
   companyOptions.value.push({ label: newCompany.name, value: newCompany.id })
   isModalOpen.value = false
-  state.value.company = newCompany.id
+  state.value.company = { label: newCompany.name, value: newCompany.id }
 }
 
 const handleCategoryAdded = (newCategory) => {
   categoryOptions.value.push({ label: newCategory.name, value: newCategory.id })
   isModalOpen.value = false
-  state.value.category = newCategory.id
+  state.value.category = { label: newCategory.name, value: newCategory.id }
 }
 
 const handleLocationAdded = (newLocation) => {
   locationOptions.value.push({ label: newLocation.name, value: newLocation.id })
   isModalOpen.value = false
-  state.value.location = newLocation.id
+  state.value.location = { label: newLocation.name, value: newLocation.id }
 }
 
 onMounted(() => {
@@ -250,5 +247,4 @@ onMounted(() => {
   fetchCategories()
   fetchLocations()
 })
-
 </script>
