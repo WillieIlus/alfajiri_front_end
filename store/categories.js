@@ -67,7 +67,8 @@ export const useCategoryStore = defineStore('category', {
           throw new Error(errorData.detail || 'Failed to create category');
         }
         const data = await response.json();
-        this.categories.push(data); // Push new category to the list
+        this.categories.push(data);
+        await this.fetchCategories()
       } catch (error) {
         console.error('Create Category Error:', error);
         this.error = error.message;

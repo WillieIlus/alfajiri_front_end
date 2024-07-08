@@ -54,7 +54,7 @@ export const useJobStore = defineStore('job', {
         this.jobs = data;
       });
     },
-    // fetch jobs by category slug
+
     async fetchJobsByCategory(slug) {
       await this.handleError(async () => {
         const response = await fetch(`${BASE_URL}/jobs/category/${slug}`);
@@ -63,7 +63,6 @@ export const useJobStore = defineStore('job', {
       });
     },
 
-    //fetch jobs by company slug
     async fetchJobsByCompany(slug) {
       await this.handleError(async () => {
         const response = await fetch(`${BASE_URL}/jobs/company/${slug}`);
@@ -72,7 +71,6 @@ export const useJobStore = defineStore('job', {
       });
     },
 
-    //fetch jobs by location slug
     async fetchJobsByLocation(slug) { 
       await this.handleError(async () => {
         const response = await fetch(`${BASE_URL}/jobs/location/${slug}`);
@@ -102,17 +100,13 @@ export const useJobStore = defineStore('job', {
           headers: headers,
           body: data,
         }); 
-        console.log('The response is:', response);
         if (!response.ok) {
           throw new Error('Server responded with ' + response.status);
         }
         const responseData = await response.json();
-        console.log('The received data is:', responseData )
         this.jobs.push(responseData)
-    
         await this.fetchJobs()
       } catch (error) {
-        console.error('Error submitting form:', error);
         this.error = error;
       } finally {
         this.loading = false

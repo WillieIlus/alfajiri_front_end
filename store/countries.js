@@ -2,8 +2,6 @@ import { defineStore } from 'pinia';
 import { BASE_URL } from './base'
 import { useAccountStore } from './accounts'
 
-
-
 export const useCountriesStore = defineStore('countries', {
   state: () => ({
     countries: [],

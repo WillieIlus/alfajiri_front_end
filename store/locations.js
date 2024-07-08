@@ -1,4 +1,3 @@
-// store/location.js
 import { defineStore } from 'pinia'
 import { BASE_URL } from './base'
 import { useAccountStore } from './accounts'
@@ -59,7 +58,8 @@ export const useLocationStore = defineStore('location', {
           throw new Error(errorData.detail || 'Failed to create location');
         }
         const data = await response.json();
-        this.locations.push(data); // Push new location to the list
+        this.locations.push(data);
+        await this.fetchLocations()
         return data;
       } catch (error) {
         console.error(error);

@@ -224,23 +224,28 @@ const clearForm = () => {
   }
 }
 
-const handleCompanyAdded = (newCompany) => {
-  companyOptions.value.push({ label: newCompany.name, value: newCompany.id })
+
+const handleCompanyAdded = async (newCompany) => {
+  await companyStore.fetchCompanies()
   isModalOpen.value = false
-  state.value.company = { label: newCompany.name, value: newCompany.id }
+  const addedCompany = companies.value[companies.value.length - 1]
+  state.value.company = { label: addedCompany.name, value: addedCompany.id }
 }
 
-const handleCategoryAdded = (newCategory) => {
-  categoryOptions.value.push({ label: newCategory.name, value: newCategory.id })
+const handleCategoryAdded = async (newCategory) => {
+  await categoryStore.fetchCategories()
   isModalOpen.value = false
-  state.value.category = { label: newCategory.name, value: newCategory.id }
+  const addedCategory = categories.value[categories.value.length - 1]
+  state.value.category = { label: addedCategory.name, value: addedCategory.id }
 }
 
-const handleLocationAdded = (newLocation) => {
-  locationOptions.value.push({ label: newLocation.name, value: newLocation.id })
+const handleLocationAdded = async (newLocation) => {
+  await locationStore.fetchLocations()
   isModalOpen.value = false
-  state.value.location = { label: newLocation.name, value: newLocation.id }
+  const addedLocation = locations.value[locations.value.length - 1]
+  state.value.location = { label: addedLocation.name, value: addedLocation.id }
 }
+
 
 onMounted(() => {
   fetchCompanies()

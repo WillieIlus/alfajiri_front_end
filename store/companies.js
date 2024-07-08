@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { BASE_URL } from './base'
-
 import { useAccountStore } from './accounts'
 
 export const useCompanyStore = defineStore('company', {
@@ -91,14 +90,15 @@ export const useCompanyStore = defineStore('company', {
         });
         if (!response.ok) {
           const error = await response.json();
-          console.error('Error creating company:', error);
           throw new Error('Server responded with ' + response.status);
         }
         const responseData = await response.json();
-        console.log('Server responded with:', responseData);
+        this.companies.push(responseData)
+        await this.fetchCompanies()
       } catch (error) {
-        console.error('Error submitting form:', error);
-
+        this.error = error
+      } finally{
+        this.loading = false
       }
     },
     async fetchCompany(slug) {
