@@ -1,4 +1,4 @@
-// composables/useJobFilter.ts
+<!-- // composables/useJobFilter.ts
 import { ref, computed } from 'vue'
 
 export default function useJobFilter() {
@@ -30,4 +30,7 @@ export default function useJobFilter() {
     filters,
     applyFilters,
   }
-}
+} -->
+  <template>
+    nothing here
+  </template>

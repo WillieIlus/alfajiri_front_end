@@ -21,6 +21,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { onMounted, computed } from 'vue'
 import { useJobStore } from '~/store/jobs'
