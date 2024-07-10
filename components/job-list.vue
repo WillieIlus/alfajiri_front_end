@@ -19,7 +19,7 @@
                 </h2>
               </div>
               <div class="flex flex-col items-center md:ml-auto">
-                <UButton block class="px-6">
+                <UButton block class="px-6" :to="job.slug">
                   details
                 </UButton>
               </div>

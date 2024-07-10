@@ -8,21 +8,22 @@
 
       <div v-if="showDetails">
         <div class="flex flex-wrap">
-          <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-wrap gap-4 items-center">
+          <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
             <UFormGroup class="flex-auto" size="xl" name="company" label="Company">
               <UInputMenu v-model="state.company" :options="companyOptions" />
             </UFormGroup>
             <UButton class="mt-6 min-w-4 max-w-12 max-h-12 min-h-4" icon="i-heroicons-plus" size="sm" color="primary"
               :ui="{ rounded: 'rounded-full' }" variant="solid" @click="openModal('company')" />
           </div>
-          <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-wrap gap-4 items-center">
+
+          <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
             <UFormGroup class="flex-auto" size="xl" name="category" label="Category">
               <UInputMenu v-model="state.category" :options="categoryOptions" />
             </UFormGroup>
             <UButton class="mt-6 min-w-4 max-w-12 max-h-12 min-h-4" icon="i-heroicons-plus" size="sm" color="primary"
               :ui="{ rounded: 'rounded-full' }" variant="solid" @click="openModal('category')" />
           </div>
-          <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-wrap gap-4 items-center">
+          <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
             <UFormGroup class="flex-auto" size="xl" name="location" label="Location">
               <UInputMenu v-model="state.location" :options="locationOptions" />
             </UFormGroup>
