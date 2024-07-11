@@ -3,14 +3,12 @@ import { BASE_URL } from './base'
 
 export const useAccountStore = defineStore('account', {
   state: () => ({
-
     token: null,
     user: null,
     userById: null,
     refresh: null,
     loading: false,
     error: null,
-
   }),
   getters: {
     isLoggedIn: (state) => !!state.token,

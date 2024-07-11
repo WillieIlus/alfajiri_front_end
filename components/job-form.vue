@@ -1,6 +1,6 @@
 <template>
   <UCard>
-    <h2 class="mb-4 font-bold text-2xl"> Add a new Job Vacancy </h2>
+    <h2 class="mb-4 font-bold text-2xl">{{ jobSlug ? 'Update Job Vacancy' : 'Add a new Job Vacancy' }}</h2>
     <UForm ref="form" :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
       <UFormGroup name="title" label="Title">
         <UInput v-model="state.title" @focus="checkAuth" />
@@ -37,7 +37,10 @@
             @update:modelValue="(newValue) => state.description = newValue" />
         </UFormGroup>
 
-        <UButton type="submit" :disabled="submitting">Submit</UButton>
+        <!-- <UButton type="submit" :disabled="submitting">Submit</UButton> -->
+        <UButton type="submit" :disabled="submitting">
+      {{ jobSlug ? 'Update' : 'Submit' }}
+    </UButton>
         <UButton variant="outline" class="ml-2" @click="clearForm">
           Clear
         </UButton>
@@ -69,7 +72,7 @@ import { useCompanyStore } from '~/store/companies'
 import { useCategoryStore } from '~/store/categories'
 import { useLocationStore } from '~/store/locations'
 import { useAccountStore } from '~/store/accounts'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const toast = useToast()
 
@@ -89,7 +92,15 @@ const openModal = (type: 'company' | 'category' | 'location') => {
   isModalOpen.value = true
 }
 
+const props = defineProps({
+  jobSlug: {
+    type: String,
+    default: null
+  }
+})
+
 const router = useRouter()
+const route = useRoute()
 const jobStore = useJobStore()
 const companyStore = useCompanyStore()
 const categoryStore = useCategoryStore()
@@ -137,6 +148,7 @@ const locationOptions = computed(() => {
 });
 
 const tiptapEditor = ref(null)
+const jobSlug = route.params.slug
 
 const state = ref({
   company: null,
@@ -189,8 +201,17 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       console.log(`${pair[0]}: ${pair[1]}`);
     }
 
-    const response = await jobStore.createJob(formData);
-    successMessage.value = 'Job vacancy added successfully!';
+    let response;
+    if (jobSlug) {
+      // Update existing job
+      response = await jobStore.updateJob(jobSlug, Object.fromEntries(formData));
+      successMessage.value = 'Job vacancy updated successfully!';
+    } else {
+      // Create new job
+      response = await jobStore.createJob(formData);
+      successMessage.value = 'Job vacancy added successfully!';
+    }
+
     errorMessage.value = ''
     toast.add({ title: successMessage.value, type: 'success' })
     state.value = {
@@ -210,10 +231,26 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     emit('jobCreated')
   } catch (error) {
     successMessage.value = ''
-    errorMessage.value = 'Failed to add job vacancy.'
+    errorMessage.value = jobSlug ? 'Failed to update job vacancy.' : 'Failed to add job vacancy.'
     toast.add({ title: errorMessage.value, type: 'error' })
   } finally {
     submitting.value = false
+  }
+}
+
+const fetchJobDetails = async () => {
+  if (props.jobSlug) {
+    await jobStore.fetchJob(props.jobSlug)
+    if (jobStore.job) {
+      state.value = {
+        title: jobStore.job.title,
+        company: { label: jobStore.job.company.name, value: jobStore.job.company.id },
+        category: { label: jobStore.job.category.name, value: jobStore.job.category.id },
+        location: { label: jobStore.job.location.name, value: jobStore.job.location.id },
+        description: jobStore.job.description,
+      }
+      showDetails.value = true
+    }
   }
 }
 
@@ -252,5 +289,7 @@ onMounted(() => {
   fetchCompanies()
   fetchCategories()
   fetchLocations()
+  fetchJobDetails()
 })
+
 </script>

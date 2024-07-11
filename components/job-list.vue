@@ -18,11 +18,16 @@
                   {{ job?.title || ' ' }}
                 </h2>
               </div>
+
               <div class="flex flex-col items-center md:ml-auto">
-                <UButton block class="px-6" :to="job.slug">
-                  details
-                </UButton>
+                <NuxtLink :to="`/${job.slug}`" class="px-6 mb-2">
+                  <UButton block>details</UButton>
+                </NuxtLink>
+                <NuxtLink :to="`/edit-job/${job.slug}`" class="px-6">
+                  <UButton block color="yellow">edit</UButton>
+                </NuxtLink>
               </div>
+
             </div>
             <div class="flex justify-center md:justify-between items-center">
               <div class="flex-grow">

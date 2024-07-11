@@ -25,11 +25,8 @@ const route = useRoute()
 const router = useRouter()
 
 const jobStore = useJobStore()
-const categoryStore = useCategoryStore()
-const locationStore = useLocationStore()
 
 const { job, jobs, loading, error } = storeToRefs(jobStore)
-const { fetchJob, fetchJobsByCategory } = jobStore
 
 const breadcrumbs = ref([{
   label: 'Home',
@@ -40,9 +37,17 @@ const breadcrumbs = ref([{
 
 const crumbTitle = ref('Job Title')
 
+const fetchJobs = async() => {
+  await jobStore.fetchJobs()
+}
+
+const fetchJob = async() => {
+  await jobStore.fetchJob(route.params.slug)
+}
+
 onMounted(async () => {
-  await fetchJob(route.params.slug)
-  await fetchJobsByCategory(job.value.category.slug)
+  await fetchJob()
+  await fetchJobs()
 })
 
 watch(job, (newJob) => {

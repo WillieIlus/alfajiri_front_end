@@ -4,10 +4,15 @@
       <div>
         <div class="flex justify-between items-center">
           <div class="font-semibold text-lg">
-            Jadrian
+
+            <ULink to="/" active-class="text-primary"
+              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+              Jadrian
+            </ULink>
           </div>
           <div class="flex flex-1 justify-center items-center mx-4">
-            <UInput class="w-full" icon="i-heroicons-magnifying-glass-20-solid" size="xl" color="white" trailing placeholder="Search for jobs..." />
+            <UInput class="w-full" icon="i-heroicons-magnifying-glass-20-solid" size="xl" color="white" trailing
+              placeholder="Search for jobs..." />
           </div>
           <!-- user menu -->
           <div class="flex flex-col sm:flex-row items-center gap-2">
