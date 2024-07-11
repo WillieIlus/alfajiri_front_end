@@ -5,6 +5,7 @@ import { useAccountStore } from './accounts'
 export const useJobStore = defineStore('job', {
   state: () => ({
     jobs: [],
+    relatedJobs: [],
     currentPage: 1,
     itemsPerPage: 10,
     job: null,
@@ -80,13 +81,19 @@ export const useJobStore = defineStore('job', {
     },
 
     async fetchJob(slug) {
-      await this.handleError(async () => {
-        const response = await fetch(`${BASE_URL}/jobs/${slug}`);
+      this.loading = true;
+      try {
+        const response = await fetch(`${BASE_URL}/jobs/${slug}/`);
         const data = await response.json();
         this.job = data;
-      });
+        this.relatedJobs = data.related_jobs || [];
+      } catch (error) {
+        this.error = error.message;
+      } finally {
+        this.loading = false;
+      }
     },
-
+    
     async createJob(data) {
       this.loading = true;
       try {

@@ -9,7 +9,11 @@
         <JobOverview :error="error" :loading="loading" :job="job" />
       </div>
     </div>
-    <JobList :jobs="jobs" :loading="loading" :error="error" />
+    <JobList 
+    :jobs="relatedJobs || []" 
+    :loading="loading" 
+    :error="error"
+    :hasMoreItems="false"  />
   </CustomContainer>
 </template>
 
@@ -17,29 +21,18 @@
 import { storeToRefs } from 'pinia'
 import { useRouter, useRoute } from 'vue-router'
 import { useJobStore } from '~/store/jobs'
-import { useCategoryStore } from '~/store/categories'
-import { useLocationStore } from '~/store/locations'
 import { ref, watch } from 'vue'
 
 const route = useRoute()
-const router = useRouter()
-
 const jobStore = useJobStore()
+const { job, loading, error } = storeToRefs(jobStore)
 
-const { job, jobs, loading, error } = storeToRefs(jobStore)
+const relatedJobs = computed(() => jobStore.relatedJobs || [])
 
-const breadcrumbs = ref([{
-  label: 'Home',
-  icon: 'i-heroicons-home',
-  to: '/'
-}, 
+const breadcrumbs = ref([
+  { label: 'Home', icon: 'i-heroicons-home', to: '/' },
 ])
-
 const crumbTitle = ref('Job Title')
-
-const fetchJobs = async() => {
-  await jobStore.fetchJobs()
-}
 
 const fetchJob = async() => {
   await jobStore.fetchJob(route.params.slug)
@@ -47,16 +40,15 @@ const fetchJob = async() => {
 
 onMounted(async () => {
   await fetchJob()
-  await fetchJobs()
 })
 
 watch(job, (newJob) => {
   if (newJob) {
     crumbTitle.value = newJob.title
-    breadcrumbs.value.push({
-      label: newJob.title,
-      icon: 'i-heroicons-briefcase',
-    })
+    breadcrumbs.value = [
+      { label: 'Home', icon: 'i-heroicons-home', to: '/' },
+      { label: newJob.title, icon: 'i-heroicons-briefcase' },
+    ]
   }
 })
 </script>

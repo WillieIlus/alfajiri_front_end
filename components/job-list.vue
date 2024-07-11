@@ -68,7 +68,7 @@ import { defineProps, defineEmits } from 'vue';
 const props = defineProps({
   jobs: {
     type: Array,
-    required: true
+    default: () => []
   },
   loading: {
     type: Boolean,
