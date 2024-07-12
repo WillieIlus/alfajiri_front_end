@@ -1,9 +1,9 @@
 <template>
   <div v-if="loading">
-    loading ...
+    Loading ...
   </div>
   <div v-else-if="error">
-    error ...
+    Error ...
   </div>
   <div v-else class="space-y-6">
     <div v-if="job">
@@ -12,75 +12,73 @@
       </h3>
       <UCard class="mb-6">
         <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-globe-europe-africa" size="xl" class="py-4 bg-purple-500" />
-          <div class="">
+          <UIcon name="i-heroicons-calendar" size="xl" class="py-4 bg-purple-500" variant="soft" />
+          <div>
             <h5 class="font-semibold text-xl">
               Date Posted:
             </h5>
-            <p class="font-l font-thin text-sm">
+            <p class="font-light text-sm">
               {{ job?.timesince || "Not Specified" }}
             </p>
           </div>
         </div>
 
         <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-globe-europe-africa" size="xl" class="py-4 bg-purple-500" />
-          <div class="">
+          <UIcon name="i-heroicons-clock" size="xl" class="py-4 bg-purple-500" variant="soft" />
+          <div>
             <h5 class="font-semibold text-xl">
               Days Left:
             </h5>
-            <p class="font-l font-thin text-sm">
+            <p class="font-light text-sm">
               {{ job?.days_left || "Not Specified" }}
             </p>
           </div>
         </div>
 
-
         <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-globe-europe-africa" size="xl" class="py-4 bg-purple-500" />
-          <div class="">
+          <UIcon name="i-heroicons-currency-dollar" size="xl" class="py-4 bg-purple-500" variant="soft" />
+          <div>
             <h5 class="font-semibold text-xl">
               Salary:
             </h5>
-            <p class="font-l font-thin text-sm">
+            <p class="font-light text-sm">
               {{ job?.min_salary || "Not Specified" }} -
               {{ job?.max_salary || "Not Specified" }}
             </p>
           </div>
         </div>
 
-
         <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-globe-europe-africa" size="xl" class="py-4 bg-purple-500" />
-          <div class="">
+          <UIcon name="i-heroicons-tag" size="xl" class="py-4 bg-purple-500" variant="soft" />
+          <div>
             <h5 class="font-semibold text-xl">
               Category:
             </h5>
-            <p class="font-l font-thin text-sm">
+            <p class="font-light text-sm">
               {{ job?.get_category || "Not Specified" }}
             </p>
           </div>
         </div>
 
         <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-globe-europe-africa" size="xl" class="py-4 bg-purple-500" />
-          <div class="">
+          <UIcon name="i-heroicons-building-office-2" size="xl" class="py-4 bg-purple-500" variant="soft" />
+          <div>
             <h5 class="font-semibold text-xl">
               Company:
             </h5>
-            <p class="font-l font-thin text-sm">
+            <p class="font-light text-sm">
               {{ job?.get_company || "Not Specified" }}
             </p>
           </div>
         </div>
 
         <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-globe-europe-africa" size="xl" class="py-4 bg-purple-500" />
-          <div class="">
+          <UIcon name="i-heroicons-map-pin" size="xl" class="py-4 bg-purple-500" variant="soft" />
+          <div>
             <h5 class="font-semibold text-xl">
               Location:
             </h5>
-            <p class="font-l font-thin text-sm">
+            <p class="font-light text-sm">
               {{ job?.address || "Not Specified" }}, {{ job?.get_location || "Not Specified" }}
             </p>
           </div>
@@ -90,7 +88,6 @@
     </div>
   </div>
 </template>
-
 
 <script setup>
 import backgroundImage from '~/assets/images/background.jpg'
@@ -114,3 +111,4 @@ const props = defineProps({
   }
 })
 </script>
+

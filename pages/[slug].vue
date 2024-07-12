@@ -1,21 +1,22 @@
 <template>
   <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
   <CustomContainer>
-    <div class="flex gap-8">
-      <div class="flex-1 md:flex-none md:w-2/3">
+    <div class="flex flex-col lg:flex-row gap-8">
+      <div class="w-full lg:w-2/3">
         <JobDetails :error="error" :loading="loading" :job="job"/>
       </div>
-      <div class="flex-1 md:flex-none md:w-1/3">
+      <div class="w-full lg:w-1/3">
         <JobOverview :error="error" :loading="loading" :job="job" />
       </div>
     </div>
     <JobList 
-    :jobs="relatedJobs || []" 
-    :loading="loading" 
-    :error="error"
-    :hasMoreItems="false"  />
+      :jobs="relatedJobs || []" 
+      :loading="loading" 
+      :error="error"
+      :hasMoreItems="false"  />
   </CustomContainer>
 </template>
+
 
 <script setup>
 import { storeToRefs } from 'pinia'

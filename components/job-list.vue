@@ -14,11 +14,10 @@
           <div class="text-center md:text-left space-y-4 flex-grow">
             <div class="flex justify-center md:justify-between items-center">
               <div class="flex-grow">
-                <h2 class="font-semibold text-2xl text-gray-900 dark:text-gray-100">
+                <NuxtLink :to="`/${job.slug}`" class="font-semibold text-2xl text-gray-900 dark:text-gray-100">
                   {{ job?.title || ' ' }}
-                </h2>
+                </NuxtLink>
               </div>
-
               <div class="flex flex-col items-center md:ml-auto">
                 <NuxtLink :to="`/${job.slug}`" class="px-6 mb-2">
                   <UButton block>details</UButton>

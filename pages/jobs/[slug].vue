@@ -2,10 +2,10 @@
   <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
   <CustomContainer>
     <div class="flex gap-8">
-      <div class="flex-1 md:flex-none md:w-2/3">
-        <JobDetails  :error="error" :loading="loading" :job="job"/>
+      <div class="flex-1 w-full lg:w-2/3">
+        <JobDetails :error="error" :loading="loading" :job="job"/>
       </div>
-      <div class="flex-1 md:flex-none md:w-1/3">
+      <div class="flex-1 w-full  lg:w-1/3">
         <JobOverview :error="error" :loading="loading" :job="job" />
       </div>
     </div>
