@@ -6,26 +6,28 @@
           <div class="font-semibold text-lg">
             <ULink to="/" active-class="text-primary"
               inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-              <img :src="logo" alt="Logo" class="h-8"/>
+              <img :src="logo" alt="Logo" class="h-8" />
             </ULink>
           </div>
-          <div class="flex flex-1 justify-center items-center mx-4">
+          <div class="flex flex-1 justify-center items-center mx-16 ">
             <UInput class="w-full" icon="i-heroicons-magnifying-glass-20-solid" size="xl" color="white" trailing
               placeholder="Search for jobs..." />
           </div>
           <!-- user menu -->
+
+
           <div class="flex flex-col sm:flex-row items-center gap-2">
-            <div v-if="isLoggedIn">
+            <div v-if="isLoggedIn" class="flex justify-center items-center gap-4">
               <span class="px-4">Hi {{ user?.first_name || 'user' }}</span>
               <span>
                 <Logout />
               </span>
             </div>
             <div v-else>
-              <UButton size="md" icon="i-heroicons-user" label="signup" class="pr-2" />
+              <UButton size="md" icon="i-heroicons-user" label="signup" class="mr-2" />
               <UButton size="md" icon="i-heroicons-lock-closed" variant="outline" label="login" to="/login" />
             </div>
-            <ColorMode/>
+            <ColorMode />
           </div>
           <!-- end user menu -->
         </div>
@@ -94,6 +96,7 @@ onMounted(() => {
 }
 
 .top-nav img {
-  height: 32px; /* Adjust the height of the logo image as needed */
+  height: 32px;
+  /* Adjust the height of the logo image as needed */
 }
 </style>

@@ -1,8 +1,41 @@
+<style>
+footer {
+  @apply w-full bg-gray-900 text-gray-200 py-8 mt-20 sm:mt-8 sm:w-full;
+}
+
+footer img {
+  @apply h-8;
+}
+
+hr {
+  @apply my-4 border-gray-700;
+}
+</style>
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import logoImg from '~/assets/images/LogoWhite.png'
+
+const logo = logoImg
+const currentYear = ref(new Date().getFullYear())
+const route = useRoute()
+
+const links = [{
+  label: 'Horizontal Navigation',
+  to: `${route.path.startsWith('/dev') ? '/dev' : ''}/components/horizontal-navigation`
+}, {
+  label: 'Command Palette',
+  to: '/components/command-palette'
+}, {
+  label: 'Table',
+  to: '/components/table'
+}]
+</script>
 <template>
-  <footer class="w-full bg-gray-900 text-gray-200 py-8 mt-40 sm:mt-0 sm:fixed sm:bottom-0 sm:w-full">
+  <footer class="w-full bg-gray-900 text-gray-200 py-8 mt-20 sm:mt-8 sm:w-full">
     <CustomContainer>
-      <div class="flex flex-col items-center justify-between">
-        <div class="flex w-1/4">
+      <div class="flex flex-col sm:flex-row items-center justify-between">
+        <div class="flex-auto">
           <div class="font-semibold text-lg">
             <ULink to="/" active-class="text-primary"
               inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
@@ -10,7 +43,7 @@
             </ULink>
           </div>
         </div>
-        <div class="flex w-1/4">
+        <div class="flex-auto flex justify-end">
           <UHorizontalNavigation :links="links">
             <template #default="{ link }">
               <span class="group-hover:text-primary relative">{{ link.label }}</span>
@@ -54,37 +87,4 @@
     </CustomContainer>
   </footer>
 </template>
-<script setup lang="ts">
-import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useRoute } from 'vue-router'
-import logoImg from '~/assets/images/LogoWhite.png'
 
-const logo = logoImg
-const currentYear = ref(new Date().getFullYear())
-const route = useRoute()
-
-const links = [{
-  label: 'Horizontal Navigation',
-  to: `${route.path.startsWith('/dev') ? '/dev' : ''}/components/horizontal-navigation`
-}, {
-  label: 'Command Palette',
-  to: '/components/command-palette'
-}, {
-  label: 'Table',
-  to: '/components/table'
-}]
-</script>
-<style>
-footer {
-  @apply w-full bg-gray-900 text-gray-200 py-8 mt-40 sm:mt-0 sm:fixed sm:bottom-0 sm:w-full;
-}
-
-footer img {
-  @apply h-8;
-}
-
-hr {
-  @apply my-4 border-gray-700;
-}
-</style>
