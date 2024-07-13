@@ -1,5 +1,5 @@
 <template>
-  <UCard class="my-5">
+  <UCard class="">
     <template #header>
       <h2 class="font-semibold text-2xl my-4"> Date Posted</h2>
     </template>

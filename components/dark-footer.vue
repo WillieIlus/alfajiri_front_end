@@ -43,7 +43,7 @@ const links = [{
             </ULink>
           </div>
         </div>
-        <div class="flex-auto flex justify-end">
+        <div class="flex-auto flex justify-items-end justify-end">
           <UHorizontalNavigation :links="links">
             <template #default="{ link }">
               <span class="group-hover:text-primary relative">{{ link.label }}</span>

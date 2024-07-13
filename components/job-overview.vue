@@ -67,7 +67,7 @@
               Company:
             </h5>
             <p class="font-light text-sm">
-              {{ job?.get_company || "Not Specified" }}
+              {{ job?.get_company.name || "Not Specified" }}
             </p>
           </div>
         </div>

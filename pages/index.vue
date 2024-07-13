@@ -4,21 +4,18 @@
     <CustomContainer>
       <div class="flex gap-[28px]">
         <div class="hidden w-full lg:block lg:w-1/4">
-          <Filters /><TiptapEditor/>
+          <Filters />
         </div>
         <div class="w-full lg:w-3/4">
-          <UButton class="-mt-6 z-10 min-w-4 max-w-12 max-h-12 min-h-4" icon="i-heroicons-plus" size="sm" color="primary"
-              :ui="{ rounded: 'rounded-full' }" variant="solid" @click="openModal('company')" />
+          <div class="block lg:hidden">
+          <UButton class="px-4 mb-2"  icon="i-heroicons-adjustments-horizontal" size="sm" color="primary" variant="solid" label="Filters"  
+            :trailing="false" />
+            </div>
           <JobForm @jobCreated="fetchJobs" />
-          <JobList 
-            :jobs="paginatedJobs" 
-            :loading="loading" 
-            :error="error" 
-            :hasMoreItems="hasMoreItems" 
-            @incrementItemsPerPage="incrementItemsPerPage" 
-          />
+          <JobList :jobs="paginatedJobs" :loading="loading" :error="error" :hasMoreItems="hasMoreItems"
+            @incrementItemsPerPage="incrementItemsPerPage" />
         </div>
-        </div>
+      </div>
     </CustomContainer>
   </div>
 </template>

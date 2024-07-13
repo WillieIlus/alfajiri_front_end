@@ -9,8 +9,8 @@
       <UCard v-for="job in jobs" :key="job.id"
         class="my-5 p-5 bg-white dark:bg-gray-700 shadow-lg rounded-lg transition transform hover:scale-105">
         <div class="flex flex-col md:flex-row gap-6 items-start">
-          <img class="w-full md:w-[33%] md:rounded-lg rounded-full mx-auto shadow-md object-cover overflow-hidden"
-            :src="logoSrc" alt="Company Logo" width="512" height="512" />
+          <img class="m-5 w-full md:w-[16%] md:rounded-lg rounded-full mx-auto object-cover overflow-hidden"
+            :src="job.get_company.logo" :alt="job.get_company.name" width="512" height="512" />
           <div class="text-center md:text-left space-y-4 flex-grow">
             <div class="flex justify-center md:justify-between items-center">
               <div class="flex-grow">
@@ -18,11 +18,12 @@
                   {{ job?.title || ' ' }}
                 </NuxtLink>
               </div>
-              <div class="flex flex-col items-center md:ml-auto">
-                <NuxtLink :to="`/${job.slug}`" class="px-6 mb-2">
+
+              <div class="flex items-center justify-center md:ml-auto gap-2">
+                <NuxtLink :to="`/${job.slug}`">
                   <UButton block>details</UButton>
                 </NuxtLink>
-                <NuxtLink :to="`/edit-job/${job.slug}`" class="px-6">
+                <NuxtLink :to="`/edit-job/${job.slug}`">
                   <UButton block color="yellow">edit</UButton>
                 </NuxtLink>
               </div>
