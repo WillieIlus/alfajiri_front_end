@@ -37,9 +37,10 @@
             @update:modelValue="(newValue) => state.description = newValue" />
         </UFormGroup>
 
+        <!-- <UButton type="submit" :disabled="submitting">Submit</UButton> -->
         <UButton type="submit" :disabled="submitting">
-          {{ jobSlug ? 'Update' : 'Submit' }}
-        </UButton>
+      {{ jobSlug ? 'Update' : 'Submit' }}
+    </UButton>
         <UButton variant="outline" class="ml-2" @click="clearForm">
           Clear
         </UButton>
@@ -62,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
@@ -71,7 +72,7 @@ import { useCompanyStore } from '~/store/companies'
 import { useCategoryStore } from '~/store/categories'
 import { useLocationStore } from '~/store/locations'
 import { useAccountStore } from '~/store/accounts'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const toast = useToast()
 
@@ -99,12 +100,13 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const route = useRoute()
 const jobStore = useJobStore()
 const companyStore = useCompanyStore()
 const categoryStore = useCategoryStore()
 const locationStore = useLocationStore()
 const accountStore = useAccountStore()
-const emit = defineEmits(['jobCreated', 'jobUpdated'])
+const emit = defineEmits(['jobCreated'])
 
 const { companies } = storeToRefs(companyStore)
 const { categories } = storeToRefs(categoryStore)
@@ -146,6 +148,7 @@ const locationOptions = computed(() => {
 });
 
 const tiptapEditor = ref(null)
+const jobSlug = route.params.slug
 
 const state = ref({
   company: null,
@@ -199,24 +202,36 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     }
 
     let response;
-    if (props.jobSlug) {
+    if (jobSlug) {
       // Update existing job
-      response = await jobStore.updateJob(props.jobSlug, Object.fromEntries(formData));
+      response = await jobStore.updateJob(jobSlug, Object.fromEntries(formData));
       successMessage.value = 'Job vacancy updated successfully!';
-      emit('jobUpdated')
     } else {
       // Create new job
       response = await jobStore.createJob(formData);
       successMessage.value = 'Job vacancy added successfully!';
-      emit('jobCreated')
     }
 
     errorMessage.value = ''
     toast.add({ title: successMessage.value, type: 'success' })
-    clearForm()
+    state.value = {
+      company: null,
+      category: null,
+      location: null,
+      title: '',
+      description: '',
+    };
+
+    showDetails.value = false
+
+    if (tiptapEditor.value && tiptapEditor.value.editor) {
+      tiptapEditor.value.editor.commands.clearContent()
+    }
+
+    emit('jobCreated')
   } catch (error) {
     successMessage.value = ''
-    errorMessage.value = props.jobSlug ? 'Failed to update job vacancy.' : 'Failed to add job vacancy.'
+    errorMessage.value = jobSlug ? 'Failed to update job vacancy.' : 'Failed to add job vacancy.'
     toast.add({ title: errorMessage.value, type: 'error' })
   } finally {
     submitting.value = false
@@ -236,24 +251,17 @@ const fetchJobDetails = async () => {
       }
       showDetails.value = true
     }
-  } else {
-    clearForm()
   }
 }
 
 const clearForm = () => {
-  state.value = {
-    company: null,
-    category: null,
-    location: null,
-    title: '',
-    description: '',
-  };
+  form.value.reset()
   showDetails.value = false
   if (tiptapEditor.value && tiptapEditor.value.editor) {
     tiptapEditor.value.editor.commands.clearContent()
   }
 }
+
 
 const handleCompanyAdded = async (newCompany) => {
   await companyStore.fetchCompanies()
@@ -276,11 +284,12 @@ const handleLocationAdded = async (newLocation) => {
   state.value.location = { label: addedLocation.name, value: addedLocation.id }
 }
 
-watch(() => props.jobSlug, fetchJobDetails, { immediate: true })
 
 onMounted(() => {
   fetchCompanies()
   fetchCategories()
   fetchLocations()
+  fetchJobDetails()
 })
+
 </script>
