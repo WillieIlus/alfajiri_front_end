@@ -4,10 +4,9 @@
       <div>
         <div class="flex justify-between items-center">
           <div class="font-semibold text-lg">
-
             <ULink to="/" active-class="text-primary"
               inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-              Jadrian
+              <img :src="logo" alt="Logo" class="h-8"/>
             </ULink>
           </div>
           <div class="flex flex-1 justify-center items-center mx-4">
@@ -26,7 +25,7 @@
               <UButton size="md" icon="i-heroicons-user" label="signup" class="pr-2" />
               <UButton size="md" icon="i-heroicons-lock-closed" variant="outline" label="login" to="/login" />
             </div>
-            <USelect class="inline-block" v-model="$colorMode.preference" :options="['light', 'dark']" />
+            <ColorMode/>
           </div>
           <!-- end user menu -->
         </div>
@@ -39,9 +38,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAccountStore } from '~/store/accounts'
+import logoImg from '~/assets/images/LogoWhite.png'
 
 const accountStore = useAccountStore()
 const { user, isLoggedIn } = storeToRefs(accountStore)
+const logo = logoImg // Assign the imported logo image to a variable
 
 const isScrolled = ref(false)
 const scrollPosition = ref(0)
@@ -90,5 +91,9 @@ onMounted(() => {
   @apply h-20 flex items-center text-gray-200 fixed w-full transition-opacity duration-300;
   z-index: 10;
   /* Ensure the nav stays on top */
+}
+
+.top-nav img {
+  height: 32px; /* Adjust the height of the logo image as needed */
 }
 </style>

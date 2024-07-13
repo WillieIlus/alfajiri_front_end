@@ -1,18 +1,90 @@
 <template>
-  <footer class="w-full bg-torea-bay-800 text-gray-200 py-5 mt-40">
-    <CustomContainer> 
-      <div class=" flex justify-between items-between">
-        <div class=" flex-auto ">
-          @2024 Alfajirijobs. All Rights Reserved
+  <footer class="w-full bg-gray-900 text-gray-200 py-8 mt-40 sm:mt-0 sm:fixed sm:bottom-0 sm:w-full">
+    <CustomContainer>
+      <div class="flex flex-col items-center justify-between">
+        <div class="flex w-1/4">
+          <div class="font-semibold text-lg">
+            <ULink to="/" active-class="text-primary"
+              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+              <img :src="logo" alt="Logo" class="h-8" />
+            </ULink>
+          </div>
         </div>
-        <div class=" flex-auto ">
-          <nuxtLink to="facebook.com">
-          <UIcon name="i-heroicons-map-pin" class="pr-1" />
-          </nuxtLink>
+        <div class="flex w-1/4">
+          <UHorizontalNavigation :links="links">
+            <template #default="{ link }">
+              <span class="group-hover:text-primary relative">{{ link.label }}</span>
+            </template>
+          </UHorizontalNavigation>
+        </div>
+      </div>
+      <hr class="my-4 border-gray-700" />
+      <div class="flex justify-between items-center">
+        <div class="flex-auto">
+          &copy; {{ currentYear }} Alfajirijobs. All Rights Reserved
+        </div>
+        <div class="flex-auto flex justify-end space-x-4">
+          <nuxt-link to="https://facebook.com">
+            <div class="bg-gray-800 py-2 px-3 rounded-full">
+              <UIcon name="i-fa6-brands:facebook-f" class="text-gray-200" dynamic />
+            </div>
+          </nuxt-link>
+          <nuxt-link to="https://x.com">
+            <div class="bg-gray-800 py-2 px-3 rounded-full">
+              <UIcon name="i-fa6-brands:x-twitter" class="text-gray-200" dynamic />
+            </div>
+          </nuxt-link>
+          <nuxt-link to="https://instagram.com">
+            <div class="bg-gray-800 py-2 px-3 rounded-full">
+              <UIcon name="i-fa6-brands:instagram" class="text-gray-200" dynamic />
+            </div>
+          </nuxt-link>
+          <nuxt-link to="https://linkedin.com">
+            <div class="bg-gray-800 py-2 px-3 rounded-full">
+              <UIcon name="i-fa6-brands:linkedin-in" class="text-gray-200" dynamic />
+            </div>
+          </nuxt-link>
+          <nuxt-link to="https://youtube.com">
+            <div class="bg-gray-800 py-2 px-3 rounded-full">
+              <UIcon name="i-fa6-brands:youtube" class="text-gray-200" dynamic />
+            </div>
+          </nuxt-link>
         </div>
       </div>
     </CustomContainer>
   </footer>
 </template>
-<!-- the icons of facebook, instagram, linked in, youtube, to be on the far right -->
+<script setup lang="ts">
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useRoute } from 'vue-router'
+import logoImg from '~/assets/images/LogoWhite.png'
 
+const logo = logoImg
+const currentYear = ref(new Date().getFullYear())
+const route = useRoute()
+
+const links = [{
+  label: 'Horizontal Navigation',
+  to: `${route.path.startsWith('/dev') ? '/dev' : ''}/components/horizontal-navigation`
+}, {
+  label: 'Command Palette',
+  to: '/components/command-palette'
+}, {
+  label: 'Table',
+  to: '/components/table'
+}]
+</script>
+<style>
+footer {
+  @apply w-full bg-gray-900 text-gray-200 py-8 mt-40 sm:mt-0 sm:fixed sm:bottom-0 sm:w-full;
+}
+
+footer img {
+  @apply h-8;
+}
+
+hr {
+  @apply my-4 border-gray-700;
+}
+</style>
