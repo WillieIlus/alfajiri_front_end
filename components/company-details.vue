@@ -21,7 +21,7 @@
             <div class="flex flex-col md:flex-row sm:items-center sm:justify-between">
               <div id="logo" class="flex flex-grow-o items-center justify-center sm:justify-start sm:w-1/2">
                 <div class="font-thin text-sm mb-2 flex items-center justify-center sm:mb-0">
-                  <img src="~/assets/images/logo.png" alt="Logo" class="min-h-10 max-h-14">
+                  <img src="~/assets/images/Alfajiri jobs Logo-01.png"alt="Logo" class="min-h-10 max-h-14">
                 </div>
               </div>
               <div id="details" class="flex-grow text-center sm:text-left sm:w-1/2">
