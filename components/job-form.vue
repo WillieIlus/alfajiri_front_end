@@ -183,18 +183,21 @@ const checkAuth = () => {
 }
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
-  submitting.value = true
-  errorMessage.value = ''
+  submitting.value = true;
+  errorMessage.value = '';
 
-  const { data } = event
+  const { data } = event;
   try {
     console.log('Form data:', data);
-    const formData = new FormData()
-    formData.append('title', data.title)
-    formData.append('company', data.company.value.toString())
-    formData.append('category', data.category.value.toString())
-    formData.append('location', data.location.value.toString())
-    formData.append('description', data.description)
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('company', data.company.value.toString());
+    formData.append('category', data.category.value.toString());
+    formData.append('location', data.location.value.toString());
+    formData.append('description', data.description);
+
+    // If you have file inputs, append them here
+    // if (data.logo) formData.append('logo', data.logo);
 
     console.log('FormData content:');
     for (let pair of formData.entries()) {
@@ -204,27 +207,28 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     let response;
     if (props.jobSlug) {
       // Update existing job
-      response = await jobStore.updateJob(props.jobSlug, Object.fromEntries(formData));
+      response = await jobStore.updateJob(props.jobSlug, formData);
       successMessage.value = 'Job vacancy updated successfully!';
-      emit('jobUpdated')
+      emit('jobUpdated');
     } else {
       // Create new job
       response = await jobStore.createJob(formData);
       successMessage.value = 'Job vacancy added successfully!';
-      emit('jobCreated')
+      emit('jobCreated');
     }
 
-    errorMessage.value = ''
-    toast.add({ title: successMessage.value, type: 'success' })
-    clearForm()
+    errorMessage.value = '';
+    toast.add({ title: successMessage.value, type: 'success' });
+    clearForm();
   } catch (error) {
-    successMessage.value = ''
-    errorMessage.value = props.jobSlug ? 'Failed to update job vacancy.' : 'Failed to add job vacancy.'
-    toast.add({ title: errorMessage.value, type: 'error' })
+    console.error('Error submitting form:', error);
+    successMessage.value = '';
+    errorMessage.value = props.jobSlug ? 'Failed to update job vacancy.' : 'Failed to add job vacancy.';
+    toast.add({ title: errorMessage.value, type: 'error' });
   } finally {
-    submitting.value = false
+    submitting.value = false;
   }
-}
+};
 
 const fetchJobDetails = async () => {
   if (props.jobSlug) {
@@ -232,9 +236,9 @@ const fetchJobDetails = async () => {
     if (jobStore.job) {
       state.value = {
         title: jobStore.job.title,
-        company: { label: jobStore.job.company.name, value: jobStore.job.company.id },
-        category: { label: jobStore.job.category.name, value: jobStore.job.category.id },
-        location: { label: jobStore.job.location.name, value: jobStore.job.location.id },
+        company: { label: jobStore.job.get_company.name, value: jobStore.job.get_company.id },
+        category: { label: jobStore.job.get_category, value: jobStore.job.category },
+        location: { label: jobStore.job.get_location, value: jobStore.job.location },
         description: jobStore.job.description,
       }
       showDetails.value = true
@@ -243,6 +247,9 @@ const fetchJobDetails = async () => {
     clearForm()
   }
 }
+
+
+
 
 const clearForm = () => {
   state.value = {
@@ -281,9 +288,10 @@ const handleLocationAdded = async (newLocation) => {
 
 watch(() => props.jobSlug, fetchJobDetails, { immediate: true })
 
-onMounted(() => {
-  fetchCompanies()
-  fetchCategories()
-  fetchLocations()
+onMounted(async () => {
+  await fetchJobDetails()
+  await fetchCompanies()
+  await fetchCategories()
+  await fetchLocations()
 })
 </script>

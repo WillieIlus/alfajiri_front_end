@@ -120,27 +120,28 @@ export const useJobStore = defineStore('job', {
       }
     },
     
-    async updateJob(slug, job) {
+    async updateJob(slug, data) {
       this.loading = true;
-      const accountStore = useAccountStore();
       try {
-        const response = await fetch(`${BASE_URL}/jobs/${slug}`, {
+        const accountStore = useAccountStore();
+        const token = accountStore.token;
+        const headers = {
+          'Authorization': 'Bearer ' + token
+        };
+        const response = await fetch(`${BASE_URL}/jobs/${slug}/`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accountStore.token}`,
-          },
-          body: JSON.stringify(job),
-        });
-        const data = await response.json();
-        this.jobs = this.jobs.map((job) => {
-          if (job.slug === slug) {
-            return data;
-          }
-          return job;
-        });
+          headers: headers,
+          body: data,
+        }); 
+        if (!response.ok) {
+          throw new Error('Server responded with ' + response.status);
+        }
+        const responseData = await response.json();
+        this.jobs = this.jobs.map(job => job.slug === slug ? responseData : job);
+        await this.fetchJobs();
       } catch (error) {
-        console.error(error);
+        console.error('Error updating job:', error);
+        this.error = error;
       } finally {
         this.loading = false;
       }

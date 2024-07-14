@@ -11,7 +11,7 @@
           <UCard class="my-5 p-5 bg-white dark:bg-gray-700 shadow-lg rounded-lg transition transform hover:scale-105">
             <div class="flex flex-col md:flex-row gap-6 items-start">
               <img class="m-5 w-full md:w-[16%] md:rounded-lg rounded-full mx-auto object-cover overflow-hidden"
-                :src="job.get_company.logo || noLogo" :alt="job.get_company.name" width="512" height="512" />
+                :src="job.get_company?.logo || noLogo" :alt="job.get_company?.name" width="512" height="512" />
               <div class="text-center md:text-left space-y-4 flex-grow">
                 <div class="flex justify-center md:justify-between items-center">
                   <div class="flex-grow">
@@ -33,15 +33,15 @@
 
                     <div class="font-light text-xs text-gray-600 dark:text-gray-300 flex">
                       <span class="flex items-center px-2">
-                        <UIcon name="i-heroicons-adjustments-horizontal" class="pr-9 text-torea-bay-400 text-2xl" />
+                        <UIcon name="i-heroicons-adjustments-horizontal" class="pr-9 text-torea-bay-400 text-lg font-bold" />
                         {{ job?.get_category || ' ' }}
                       </span>
                       <span class="flex items-center px-2">
-                        <UIcon name="i-heroicons-map-pin" class="pr-9 text-torea-bay-400 text-2xl" />
+                        <UIcon name="i-heroicons-map-pin" class="pr-9 text-torea-bay-400 text-lg font-bold" />
                         {{ job?.address ? job.address + ', ' : '' }}{{ job?.get_location || ' ' }}
                       </span>
                       <span class="flex items-center px-4">
-                        <UIcon name="i-heroicons-eye" class="pr-9 text-torea-bay-400 text-2xl" />
+                        <UIcon name="i-heroicons-eye" class="pr-9 text-torea-bay-400 text-lg font-bold" />
                         {{ job?.view_count || '' }}
                       </span>
 
@@ -73,7 +73,7 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
 import { useRouter } from 'vue-router'
-import noLogo from '@/assets/images/no-image-01.jpg'
+import noLogo from '~/assets/images/no-image-01.jpg'
 
 const router = useRouter()
 const props = defineProps({
