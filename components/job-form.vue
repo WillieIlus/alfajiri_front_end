@@ -61,6 +61,7 @@
   </UModal>
 </template>
 
+
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -99,6 +100,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const route = useRoute()
 const jobStore = useJobStore()
 const companyStore = useCompanyStore()
 const categoryStore = useCategoryStore()
@@ -146,6 +148,7 @@ const locationOptions = computed(() => {
 });
 
 const tiptapEditor = ref(null)
+const jobSlug = route.params.slug
 
 const state = ref({
   company: null,
@@ -156,11 +159,11 @@ const state = ref({
 });
 
 const schema = z.object({
-  title: z.string().min(5, 'Must be at least 5 characters'),
+  title: z.string().min(4, 'Must be at least 4 characters'),
   company: z.any(),
   category: z.any(),
   location: z.any(),
-  description: z.string().min(30, 'Must be at least 30 characters'),
+  description: z.string().min(26, 'Must be at least 26 characters'),
 })
 
 type Schema = z.infer<typeof schema>

@@ -3,12 +3,16 @@
     <Hero />
     <CustomContainer>
       <div class="flex gap-[28px]">
-        <div class="hidden w-full lg:block lg:w-1/4">
+        <div class="lg:hidden">
+          <SlideOver v-model:isOpen="isSlideOverOpen"/>
+        </div>
+        <div class="hidden lg:block">
           <Filters />
         </div>
         <div class="w-full lg:w-3/4">
           <div class="block lg:hidden">
-            <UButton class="px-4 mb-2" icon="i-heroicons-adjustments-horizontal" size="sm" color="primary" variant="solid" label="Filters" :trailing="false" />
+            <UButton class="px-4 mb-2" icon="i-heroicons-adjustments-horizontal" size="sm" color="primary"
+              variant="solid" label="Filters" :trailing="false" @click="isSlideOverOpen = !isSlideOverOpen"/>
           </div>
           <JobForm 
             :jobSlug="currentJobSlug" 
@@ -42,6 +46,7 @@ const jobStore = useJobStore()
 const { loading, error, paginatedJobs, totalPages, currentPage } = storeToRefs(jobStore)
 
 const currentJobSlug = ref(null)
+const isSlideOverOpen = ref(false)
 
 const incrementItemsPerPage = () => {
   jobStore.itemsPerPage += 10

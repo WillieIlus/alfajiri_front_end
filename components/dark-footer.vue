@@ -1,36 +1,3 @@
-<style>
-footer {
-  @apply w-full bg-gray-900 text-gray-200 py-8 mt-20 sm:mt-8 sm:w-full;
-}
-
-footer img {
-  @apply h-8;
-}
-
-hr {
-  @apply my-4 border-gray-700;
-}
-</style>
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useRoute } from 'vue-router'
-import logoImg from '~/assets/images/LogoWhite.png'
-
-const logo = logoImg
-const currentYear = ref(new Date().getFullYear())
-const route = useRoute()
-
-const links = [{
-  label: 'Horizontal Navigation',
-  to: `${route.path.startsWith('/dev') ? '/dev' : ''}/components/horizontal-navigation`
-}, {
-  label: 'Command Palette',
-  to: '/components/command-palette'
-}, {
-  label: 'Table',
-  to: '/components/table'
-}]
-</script>
 <template>
   <footer class="w-full bg-gray-900 text-gray-200 py-8 mt-20 sm:mt-8 sm:w-full">
     <CustomContainer>
@@ -43,10 +10,10 @@ const links = [{
             </ULink>
           </div>
         </div>
-        <div class="flex-auto flex justify-items-end justify-end">
-          <UHorizontalNavigation :links="links">
+        <div class="flex-auto flex justify-end">
+          <UHorizontalNavigation :links="links" class="flex items-end content-end">
             <template #default="{ link }">
-              <span class="group-hover:text-primary relative">{{ link.label }}</span>
+              <span class="group-hover:text-primary relative items-end content-end">{{ link.label }}</span>
             </template>
           </UHorizontalNavigation>
         </div>
@@ -88,3 +55,40 @@ const links = [{
   </footer>
 </template>
 
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import logoImg from '~/assets/images/LogoWhite.png'
+
+const logo = logoImg
+const currentYear = ref(new Date().getFullYear())
+const route = useRoute()
+
+const links = [{
+  label: 'Home',
+  to: '/'
+},
+{
+  label: 'Jobs',
+  to: '/jobs'
+},
+{
+  label: 'Companies',
+  to: `${route.path.startsWith('/companies') ? '/companies' : ''}/companies`
+}
+]
+</script>
+
+<style>
+footer {
+  @apply w-full bg-gray-900 text-gray-200 py-8 mt-20 sm:mt-8 sm:w-full;
+}
+
+footer img {
+  @apply h-8;
+}
+
+hr {
+  @apply my-4 border-gray-700;
+}
+</style>
