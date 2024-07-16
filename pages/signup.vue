@@ -7,7 +7,7 @@
         <div class="relative overflow-hidden bg-white dark:bg-slate-900 shadow-md dark:shadow-gray-800 rounded-md">
           <div class="p-6">
             <a href="">
-              <img src="assets/images/logo.png" class="mx-auto h-[24px] block dark:hidden" alt="">
+              <img src="assets/images/Logo.png" class="mx-auto h-[24px] block dark:hidden" alt="">
               <img src="assets/images/logoWhite.png" class="mx-auto h-[24px] dark:block hidden" alt="">
             </a>
             <h5 class="my-6 text-xl font-semibold">Signup</h5>
