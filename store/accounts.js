@@ -15,24 +15,24 @@ export const useAccountStore = defineStore('account', {
 
   },
   actions: {
-    async signup(first_name, phone, email, password) {
+    async signup(userData) {
       try {
         const response = await fetch(`${BASE_URL}/accounts/users/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ first_name, phone, email, password }),
+          body: JSON.stringify(userData),
         });
         if (!response.ok) {
           const errorData = await response.json();
           console.error('Bad Request Error:', errorData);
-          const error = new Error(errorData.detail);
-          throw error;
+          throw new Error(JSON.stringify(errorData));
         }
         const data = await response.json();
         this.token = data.access;
-        this.user = email;
+        this.user = userData.email;
       } catch (error) {
         console.error('signup failed', error);
+        throw error;
       }
     },
 

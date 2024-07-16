@@ -24,7 +24,7 @@
               </span>
             </div>
             <div v-else>
-              <UButton size="md" icon="i-heroicons-user" label="signup" class="mr-2" />
+              <UButton size="md" icon="i-heroicons-user" label="signup" to="/signup" class="mr-2" />
               <UButton size="md" icon="i-heroicons-lock-closed" variant="outline" label="login" to="/login" />
             </div>
             <ColorMode />

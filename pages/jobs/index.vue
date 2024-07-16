@@ -1,76 +1,82 @@
-<!-- <template>
-  <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
-  <SearchFilter />
-  <CustomContainer>
-    <div class="flex gap-[28px]">
-      <div class="w-1/4">
-        <Filters />
-      </div>
-      <div class="w-3/4">
-        <div v-if="loading">
-          loading...
+<template>
+  <div>
+    <Hero />
+    <CustomContainer>
+      <div class="flex gap-[28px]">
+        <div class="lg:hidden">
+          <SlideOver v-model:isOpen="isSlideOverOpen"/>
         </div>
-        <div v-else-if="error">
-          error
+        <div class="hidden lg:block">
+          <Filters />
         </div>
-        <div v-else>
+        <div class="w-full lg:w-3/4">
+          <div class="block lg:hidden">
+            <UButton class="px-4 mb-2" icon="i-heroicons-adjustments-horizontal" size="sm" color="primary"
+              variant="solid" label="Filters" :trailing="false" @click="isSlideOverOpen = !isSlideOverOpen"/>
+          </div>
+          <JobForm 
+            :jobSlug="currentJobSlug" 
+            @jobCreated="handleJobCreated" 
+            @jobUpdated="handleJobUpdated"
+          />
           <JobList 
             :jobs="paginatedJobs" 
             :loading="loading" 
             :error="error" 
-            :hasMoreItems="hasMoreItems" 
+            :hasMoreItems="hasMoreItems"
             @incrementItemsPerPage="incrementItemsPerPage" 
+            @editJob="editJob"
           />
         </div>
       </div>
-    </div>
-  </CustomContainer>
+    </CustomContainer>
+  </div>
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, computed, onMounted } from 'vue'
+import { useJobStore } from '~/store/jobs'
+import { useCategoryStore } from '~/store/categories'
+import { useLocationStore } from '~/store/locations'
+import { storeToRefs } from 'pinia'
 
-import { useJobStore } from '~/store/jobs';
-import { useCategoryStore } from '~/store/categories';
-import { useLocationStore } from '~/store/locations';
-import { storeToRefs } from 'pinia';
+const categoryStore = useCategoryStore()
+const locationStore = useLocationStore()
+const jobStore = useJobStore()
+const { loading, error, paginatedJobs, totalPages, currentPage } = storeToRefs(jobStore)
 
-const categoryStore = useCategoryStore();
-const locationStore = useLocationStore();
-const jobStore = useJobStore();
-const route = useRoute();
-
-const { categories } = storeToRefs(categoryStore);
-const { locations } = storeToRefs(locationStore);
-const { loading, error, paginatedJobs, totalPages, currentPage } = storeToRefs(jobStore);
+const currentJobSlug = ref(null)
+const isSlideOverOpen = ref(false)
 
 const incrementItemsPerPage = () => {
-  jobStore.itemsPerPage += 10;
-};
+  jobStore.itemsPerPage += 10
+}
 
 const hasMoreItems = computed(() => {
-  return jobStore.itemsPerPage < jobStore.totaljobs;
-});
+  return jobStore.itemsPerPage < jobStore.totaljobs
+})
 
-const crumbTitle = 'Job List';
+const fetchJobs = async () => {
+  await jobStore.fetchJobs()
+}
 
-const breadcrumbs = [{
-  label: 'Home',
-  icon: 'i-heroicons-home',
-  to: '/'
-}, {
-  label: 'Job List',
-  icon: 'i-heroicons-square-3-stack-3d'
-}];
+const editJob = (jobSlug) => {
+  currentJobSlug.value = jobSlug
+}
+
+const handleJobCreated = async () => {
+  await fetchJobs()
+  currentJobSlug.value = null
+}
+
+const handleJobUpdated = async () => {
+  await fetchJobs()
+  currentJobSlug.value = null
+}
 
 onMounted(async () => {
-  await jobStore.fetchJobs();
-  await categoryStore.fetchCategories();
-  await locationStore.fetchLocations();
-});
-</script> -->
-<!-- pages/jobs.vue -->
-<template>
-  future
-</template>
+  await fetchJobs()
+  await categoryStore.fetchCategories()
+  await locationStore.fetchLocations()
+})
+</script>

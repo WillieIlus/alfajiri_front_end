@@ -79,4 +79,31 @@ onMounted(async () => {
   await categoryStore.fetchCategories()
   await locationStore.fetchLocations()
 })
+
+// Compute meta description
+const metaDescription = computed(() => {
+  return `Find the latest job opportunities on Alfajirijobs. Browse through ${paginatedJobs.value.length} job listings in various categories and locations.`
+})
+
+// Use Nuxt 3's useHead composable for meta tags
+useHead({
+  title: 'Latest Job Listings - Alfajirijobs',
+  meta: [
+    { name: 'description', content: metaDescription.value },
+    { property: 'og:title', content: 'Latest Job Listings - Alfajirijobs' },
+    { property: 'og:description', content: metaDescription.value },
+    { property: 'og:url', content: 'https://alfajirijobs.com' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image', content: 'https://alfajirijobs.com/og-image.jpg' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Latest Job Listings - Alfajirijobs' },
+    { name: 'twitter:description', content: metaDescription.value },
+    { name: 'twitter:image', content: 'https://alfajirijobs.com/twitter-image.jpg' },
+  ],
+  link: [
+    { rel: 'canonical', href: 'https://alfajirijobs.com' }
+  ]
+})
+
+
 </script>
