@@ -8,7 +8,7 @@
           <div class="p-6">
             <a href="">
               <img src="assets/images/Logo.png" class="mx-auto h-[24px] block dark:hidden" alt="">
-              <img src="assets/images/LogoWhite.png" class="mx-auto h-[24px] dark:block hidden" alt="">
+              <img src="assets/images/logo-white.png" class="mx-auto h-[24px] dark:block hidden" alt="">
             </a>
             <h5 class="my-6 text-xl font-semibold">Login</h5>
             <UForm :schema="schema" :state="state" class="text-start" @submit="onSubmit">
