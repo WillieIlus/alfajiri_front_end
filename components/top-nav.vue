@@ -24,8 +24,9 @@
               </span>
             </div>
             <div v-else>
-              <UButton size="md" icon="i-heroicons-user" label="signup" to="/signup" class="mr-2" />
-              <UButton size="md" icon="i-heroicons-lock-closed" variant="outline" label="login" to="/login" />
+              <UButton size="md" icon="i-heroicons-user" label="signup" @click="openModal('signup')" class="mr-2" />
+              <UButton size="md" icon="i-heroicons-lock-closed" variant="outline" label="login"
+                @click="openModal('login')" />
             </div>
             <ColorMode />
           </div>
@@ -34,13 +35,29 @@
       </div>
     </CustomContainer>
   </div>
+  <!-- modal  -->
+  <UModal v-model="isModalOpen">
+    <UCard>
+        <template #header>
+          <NuxtLink to="/">
+            <img src="assets/images/Logo.png" class="mx-auto h-[24px] block dark:hidden" alt="">
+            <img src="assets/images/logo-white.png" class="mx-auto h-[24px] dark:block hidden" alt="">
+          </NuxtLink>
+          <h3 class="my-6 text-xl font-semibold">Login</h3>
+        </template>
+        <LoginForm v-if="activeModal === 'login'" @login-successful="handleLogin" @open-signup-modal="switchToSignupModal"/>
+      <SignupForm v-else-if="activeModal === 'signup'" @signup-successful="handleSignup" @open-login-modal="switchToLoginModal" />
+    </UCard>
+  </UModal>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAccountStore } from '~/store/accounts'
 import logoImg from '~/assets/images/LogoWhite.png'
+
+const toast = useToast()
 
 const accountStore = useAccountStore()
 const { user, isLoggedIn } = storeToRefs(accountStore)
@@ -48,6 +65,20 @@ const logo = logoImg // Assign the imported logo image to a variable
 
 const isScrolled = ref(false)
 const scrollPosition = ref(0)
+const isModalOpen = ref(false)
+const activeModal = ref('')
+const modalTitle = computed(() => {
+  switch (activeModal.value) {
+    case 'login': return 'login'
+    case 'signup': return 'signup'
+    default: return ''
+  }
+})
+
+const openModal = (type: 'login' | 'signup') => {
+  activeModal.value = type
+  isModalOpen.value = true
+}
 
 const handleScroll = () => {
   scrollPosition.value = window.scrollY
@@ -60,6 +91,14 @@ const navStyle = computed(() => {
     backgroundColor: `rgba(48, 52, 149, ${opacity})`
   }
 })
+
+const handleLogin = async (newLogin) => {
+  isModalOpen.value = false
+}
+
+const handleSignup = async (newSignup) => {
+  isModalOpen.value = false
+}
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
@@ -82,6 +121,14 @@ const links = [{
   to: '/companies'
 },
 ]
+
+const switchToLoginModal = () => {
+  activeModal.value = 'login'
+}
+
+const switchToSignupModal = () => {
+  activeModal.value = 'signup'
+}
 
 onMounted(() => {
   accountStore.getUser()

@@ -23,14 +23,13 @@
                     <UButton :to="`/${job.slug}`" color="primary">
                       View Details
                     </UButton>
-                    <UButton @click="$emit('editJob', job.slug)" color="yellow">
+                    <UButton v-if="job.get_user === user.email" @click="$emit('editJob', job.slug)" color="yellow">
                       Edit
                     </UButton>
                   </div>
                 </div>
                 <div class="flex justify-center md:justify-between items-center">
                   <div class="flex-grow">
-
                     <div class="font-light text-xs text-gray-600 dark:text-gray-300 flex">
                       <span class="flex items-center px-2">
                         <UIcon name="i-heroicons-adjustments-horizontal" class="pr-9 text-torea-bay-400 text-lg font-bold" />
@@ -44,18 +43,15 @@
                         <UIcon name="i-heroicons-eye" class="pr-9 text-torea-bay-400 text-lg font-bold" />
                         {{ job?.view_count || '' }}
                       </span>
-
                     </div>
                   </div>
                   <div class="flex flex-col items-center md:ml-auto">
                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ job?.timesince || '' }} ago</p>
                   </div>
                 </div>
-
                 <div class="text-gray-700 dark:text-gray-300 prose max-w-none dark:prose-invert">
                   <p v-html="job?.truncated_description || '&nbsp;'"></p>
                 </div>
-
               </div>
             </div>
           </UCard>
@@ -71,10 +67,14 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
 import { useRouter } from 'vue-router'
 import noLogo from '~/assets/images/no-image-01.jpg'
+import { useAccountStore } from '~/store/accounts';
+import { storeToRefs } from 'pinia';
 
+const accountStore = useAccountStore()
+
+const { user } = storeToRefs(accountStore)
 const router = useRouter()
 const props = defineProps({
   jobs: {
@@ -100,4 +100,8 @@ const emit = defineEmits(['incrementItemsPerPage']);
 const incrementItemsPerPage = () => {
   emit('incrementItemsPerPage');
 };
+
+onMounted(async () => {
+  await accountStore.getUser();
+});
 </script>

@@ -109,9 +109,7 @@ const onSubmit = async (event) => {
   const { data } = event
   submitting.value = true
   error.value = ''
-
   try {
-    console.log('Submitting Sign Up...')
     const { password_confirmation, ...signupData } = data
     await accountStore.signup(signupData)
     console.log('Account Created Successfully')
