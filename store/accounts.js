@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { BASE_URL } from './base'
+import { useJobStore } from './jobs'
 
 export const useAccountStore = defineStore('account', {
   state: () => ({
@@ -12,7 +13,6 @@ export const useAccountStore = defineStore('account', {
   }),
   getters: {
     isLoggedIn: (state) => !!state.token,
-
   },
   actions: {
     async signup(userData) {
@@ -30,6 +30,7 @@ export const useAccountStore = defineStore('account', {
         const data = await response.json();
         this.token = data.access;
         this.user = userData.email;
+        await this.fetchJobs();
       } catch (error) {
         console.error('signup failed', error);
         throw error;
@@ -37,24 +38,42 @@ export const useAccountStore = defineStore('account', {
     },
 
     async login(email, password) {
-      const response = await fetch(`${BASE_URL}/accounts/jwt/create/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
-      const data = await response.json()
-      this.token = data.access
-      this.user = email
+      try {
+        const response = await fetch(`${BASE_URL}/accounts/jwt/create/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+        this.token = data.access;
+        this.user = email;
+        await this.fetchJobs();
+      } catch (error) {
+        console.error('login failed', error);
+        throw error;
+      }
     },
 
-    async refresh() {
-      const response = await fetch(`${BASE_URL}/accounts/jwt/refresh/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh: this.refresh }),
-      })
-      const data = await response.json()
-      this.token = data.access
+    async fetchCurrentUser() {
+      try {
+        const response = await fetch(`${BASE_URL}/accounts/users/me/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`
+          }
+        });
+        const data = await response.json();
+        this.user = data;
+      } catch (error) {
+        console.error('Failed to fetch current user', error);
+        throw error;
+      }
+    },
+
+    async fetchJobs() {
+      const jobStore = useJobStore();
+      await jobStore.fetchJobs();
     },
 
     async getUser() {
@@ -102,10 +121,11 @@ export const useAccountStore = defineStore('account', {
     },
 
     logout() {
-      this.token = null
-      this.user = null
+      this.token = null;
+      this.user = null;
+      this.userById = null;
+      this.refresh = null;
     },
   },
   persist: true,
 })
-

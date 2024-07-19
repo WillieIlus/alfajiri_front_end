@@ -13,7 +13,7 @@ export const useJobStore = defineStore('job', {
     error: null,
     query: "",
   }),
-  getters: { 
+  getters: {
     paginatedJobs: (state) => {
       const startIndex = (state.currentPage - 1) * state.itemsPerPage;
       const endIndex = startIndex + state.itemsPerPage;
@@ -33,8 +33,7 @@ export const useJobStore = defineStore('job', {
         this.loading = false;
       }
     },
-
-    async fetchJobs() {
+    async fetchJobs({ title = '', location = '', category = '', company = '', min_salary = '', max_salary = '', job_type = '', vacancies = '' } = {}) {
       await this.handleError(async () => {
         const response = await fetch(`${BASE_URL}/jobs`);
         const data = await response.json();
@@ -72,7 +71,7 @@ export const useJobStore = defineStore('job', {
       });
     },
 
-    async fetchJobsByLocation(slug) { 
+    async fetchJobsByLocation(slug) {
       await this.handleError(async () => {
         const response = await fetch(`${BASE_URL}/jobs/location/${slug}`);
         const data = await response.json();
@@ -93,7 +92,7 @@ export const useJobStore = defineStore('job', {
         this.loading = false;
       }
     },
-    
+
     async createJob(data) {
       this.loading = true;
       try {
@@ -106,7 +105,7 @@ export const useJobStore = defineStore('job', {
           method: 'POST',
           headers: headers,
           body: data,
-        }); 
+        });
         if (!response.ok) {
           throw new Error('Server responded with ' + response.status);
         }
@@ -119,7 +118,7 @@ export const useJobStore = defineStore('job', {
         this.loading = false
       }
     },
-    
+
     async updateJob(slug, data) {
       this.loading = true;
       try {
@@ -132,7 +131,7 @@ export const useJobStore = defineStore('job', {
           method: 'PUT',
           headers: headers,
           body: data,
-        }); 
+        });
         if (!response.ok) {
           throw new Error('Server responded with ' + response.status);
         }

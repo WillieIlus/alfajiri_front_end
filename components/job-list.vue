@@ -3,8 +3,12 @@
     <div v-if="loading" class="text-center my-4">
       <spinner size="lg" :fullScreen="true" />
     </div>
-    <div v-else-if="error" class="text-center my-4 text-red-500">{{ error }}</div>
-    <div v-else-if="jobs.length === 0" class="text-center my-4">No jobs found.</div>
+    <div v-else-if="error || jobs.length === 0" class="text-center my-4">
+      <p v-if="error" class="text-red-500 mb-4">{{ error }}</p>
+      <p v-else class="mb-4">No jobs found.</p>
+      <UButton @click="$emit('refreshData')" icon="i-heroicons-arrow-path" label="Refresh" :loading="refreshing" />
+    </div>
+
     <div v-else>
       <ul>
         <li v-for="job in jobs" :key="job.slug">
@@ -32,7 +36,8 @@
                   <div class="flex-grow">
                     <div class="font-light text-xs text-gray-600 dark:text-gray-300 flex">
                       <span class="flex items-center px-2">
-                        <UIcon name="i-heroicons-adjustments-horizontal" class="pr-9 text-torea-bay-400 text-lg font-bold" />
+                        <UIcon name="i-heroicons-adjustments-horizontal"
+                          class="pr-9 text-torea-bay-400 text-lg font-bold" />
                         {{ job?.get_category || ' ' }}
                       </span>
                       <span class="flex items-center px-2">
@@ -67,15 +72,17 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import noLogo from '~/assets/images/no-image-01.jpg'
-import { useAccountStore } from '~/store/accounts';
-import { storeToRefs } from 'pinia';
+import { useAccountStore } from '~/store/accounts'
+import { storeToRefs } from 'pinia'
 
 const accountStore = useAccountStore()
-
 const { user } = storeToRefs(accountStore)
+const refreshing = ref(false)
 const router = useRouter()
+
 const props = defineProps({
   jobs: {
     type: Array,
@@ -92,16 +99,16 @@ const props = defineProps({
   hasMoreItems: {
     type: Boolean,
     default: true
+  },
+  refreshing: {
+    type: Boolean,
+    default: false
   }
-});
+})
 
-const emit = defineEmits(['incrementItemsPerPage']);
-
-const incrementItemsPerPage = () => {
-  emit('incrementItemsPerPage');
-};
+const emit = defineEmits(['incrementItemsPerPage', 'editJob', 'refreshData'])
 
 onMounted(async () => {
-  await accountStore.getUser();
-});
+  await accountStore.getUser()
+})
 </script>
