@@ -23,6 +23,7 @@
             <UButton class="mt-6 min-w-4 max-w-12 max-h-12 min-h-4" icon="i-heroicons-plus" size="sm" color="primary"
               :ui="{ rounded: 'rounded-full' }" variant="solid" @click="openModal('category')" />
           </div>
+
           <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
             <UFormGroup class="flex-auto" size="xl" name="location" label="Location">
               <UInputMenu v-model="state.location" :options="locationOptions" />
@@ -37,30 +38,126 @@
             @update:modelValue="(newValue) => state.description = newValue" />
         </UFormGroup>
 
-        <UButton type="submit" :disabled="submitting">
-          {{ jobSlug ? 'Update' : 'Submit' }}
-        </UButton>
-        <UButton variant="outline" class="ml-2" @click="clearForm">
-          Clear
-        </UButton>
-        <p v-if="successMessage">{{ successMessage }}</p>
-        <p v-if="errorMessage">{{ errorMessage }}</p>
+        <div v-if="jobSlug">
+          <div class="flex flex-wrap">
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="job_type" label="Job Type">
+                <USelect v-model="state.job_type" :options="JOB_TYPE_CHOICES" />
+              </UFormGroup>
+            </div>
+
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" name="image" label="Poster" size="xl">
+                <UInput type="file" @change="onImageChange" accept="image/*" />
+              </UFormGroup>
+            </div>
+
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="address" label="Address">
+                <UInput v-model="state.address" placeholder="Enter Specific Location" />
+              </UFormGroup>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap">
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="email" label="Email">
+                <UInput v-model="state.email" placeholder="Enter email" />
+              </UFormGroup>
+            </div>
+
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="website" label="Website">
+                <UInput v-model="state.website" placeholder="Enter website" />
+              </UFormGroup>
+            </div>
+
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="phone" label="Phone">
+                <UInput v-model="state.phone" placeholder="Enter phone" />
+              </UFormGroup>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap">
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="vacancies" label="Vacancies">
+                <UInput v-model="state.vacancies" placeholder="Available vacant positions" />
+              </UFormGroup>
+            </div>
+
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="work_experience" label="Work Experience">
+                <UInput v-model="state.work_experience" placeholder="Required work experience" />
+              </UFormGroup>
+            </div>
+
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="work_hours" label="Work Hours">
+                <UInput v-model="state.work_hours" placeholder="Duration of work" />
+              </UFormGroup>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap">
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="work_hour_type" label="Work Hour Type">
+                <USelect v-model="state.work_hour_type" :options="WORK_HOUR_CHOICES" />
+              </UFormGroup>
+            </div>
+
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="min_salary" label="Min Salary">
+                <UInput v-model="state.min_salary" placeholder="Minimum salary" />
+              </UFormGroup>
+            </div>
+
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="max_salary" label="Max Salary">
+                <UInput v-model="state.max_salary" placeholder="Maximum salary" />
+              </UFormGroup>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap">
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="salary_type" label="Salary Type">
+                <USelect v-model="state.salary_type" :options="SALARY_TYPE_CHOICES" />
+              </UFormGroup>
+            </div>
+
+            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="currency" label="Currency">
+                <USelect v-model="state.currency" :options="CURRENCY_CHOICES" />
+              </UFormGroup>
+            </div>
+          </div>
+        </div>
+        <div class="pt-4">
+          <UButton type="submit" :disabled="submitting">
+            {{ jobSlug ? 'Update' : 'Submit' }}
+          </UButton>
+          <UButton variant="outline" class="ml-2" @click="clearForm">
+            Clear
+          </UButton>
+          <p v-if="successMessage">{{ successMessage }}</p>
+          <p v-if="errorMessage">{{ errorMessage }}</p>
+        </div>
       </div>
     </UForm>
   </UCard>
-  <!-- modal  -->
+
   <UModal v-model="isModalOpen">
     <UCard>
       <template #header>
         <h3 class="text-xl font-semibold">{{ modalTitle }}</h3>
       </template>
       <CompanyForm v-if="activeModal === 'company'" @company-added="handleCompanyAdded" />
-      <CategoryForm v-else-if="activeModal === 'category'" @category-added="handleCategoryAdded" />
-      <LocationForm v-else-if="activeModal === 'location'" @location-added="handleLocationAdded" />
+      <CategoryForm v-if="activeModal === 'category'" @category-added="handleCategoryAdded" />
+      <LocationForm v-if="activeModal === 'location'" @location-added="handleLocationAdded" />
     </UCard>
   </UModal>
 </template>
-
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
@@ -72,12 +169,122 @@ import { useCompanyStore } from '~/store/companies'
 import { useCategoryStore } from '~/store/categories'
 import { useLocationStore } from '~/store/locations'
 import { useAccountStore } from '~/store/accounts'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
+const props = defineProps<{
+  jobSlug?: string
+}>()
+
+const emit = defineEmits(['jobCreated', 'jobUpdated'])
+
+const router = useRouter()
+const route = useRoute()
 const toast = useToast()
+const jobStore = useJobStore()
+const companyStore = useCompanyStore()
+const categoryStore = useCategoryStore()
+const locationStore = useLocationStore()
+const accountStore = useAccountStore()
+
+const { companies } = storeToRefs(companyStore)
+const { categories } = storeToRefs(categoryStore)
+const { locations } = storeToRefs(locationStore)
 
 const isModalOpen = ref(false)
 const activeModal = ref('')
+const tiptapEditor = ref(null)
+const form = ref()
+const submitting = ref(false)
+const successMessage = ref('')
+const errorMessage = ref('')
+const showDetails = ref(false)
+
+const state = ref({
+  title: '',
+  company: null,
+  category: null,
+  location: null,
+  description: '',
+  job_type: '',
+  image: null,
+  address: '',
+  email: '',
+  website: '',
+  phone: '',
+  vacancies: '',
+  work_experience: '',
+  work_hours: '',
+  work_hour_type: '',
+  min_salary: '',
+  max_salary: '',
+  salary_type: '',
+  currency: '',
+})
+
+const JOB_TYPE_CHOICES = [
+  { label: 'Full Time', value: 'Full Time' },
+  { label: 'Part Time', value: 'Part Time' },
+  { label: 'Contract', value: 'Contract' },
+  { label: 'Internship', value: 'Internship' },
+  { label: 'Temporary', value: 'Temporary' },
+  { label: 'Freelance', value: 'Freelance' },
+];
+
+const CURRENCY_CHOICES = [
+  { label: 'Kenya Shilling', value: 'KSH' },
+  { label: 'US Dollar', value: 'USD' },
+  { label: 'Uganda Shilling', value: 'UGH' },
+  { label: 'Tanzania Shilling', value: 'TSH' },
+  { label: 'Euro', value: 'EUR' },
+  { label: 'British Pound', value: 'GBP' },
+];
+
+const SALARY_TYPE_CHOICES = [
+  { label: 'Per Hour', value: 'PH' },
+  { label: 'Per Day', value: 'PD' },
+  { label: 'Per Week', value: 'PW' },
+  { label: 'Per Month', value: 'PM' },
+  { label: 'Per Year', value: 'PY' },
+];
+
+const WORK_HOUR_CHOICES = [
+  { label: 'Per Day', value: 'PD' },
+  { label: 'Per Week', value: 'PW' },
+  { label: 'Per Month', value: 'PM' },
+  { label: 'Per Year', value: 'PY' },
+];
+
+const schema = z.object({
+  title: z.string().min(4, 'Must be at least 4 characters'),
+  company: z.any().optional(),
+  description: z.string().min(26, 'Must be at least 26 characters'),
+  category: z.any().optional().nullish().or(z.literal('')),
+  location: z.any().optional().nullish().or(z.literal('')),
+  job_type: z.enum(JOB_TYPE_CHOICES).optional().nullish().or(z.literal('')),
+  image: z.any().optional().nullish().or(z.literal('')),
+  address: z.string().optional().nullish().or(z.literal('')),
+  email: z.string().email('Invalid email').optional().nullish().or(z.literal('')),
+  website: z.string().url('Invalid URL').optional().nullish().or(z.literal('')),
+  phone: z.string().optional().nullish().or(z.literal('')),
+  vacancies: z.number().int('Must be an integer').positive('Must be positive').optional().nullish().or(z.literal('')),
+  work_experience: z.number().int('Must be an integer').nonnegative('Must be non-negative').optional().nullish().or(z.literal('')),
+  work_hours: z.number().int('Must be an integer').positive('Must be positive').optional().nullish().or(z.literal('')),
+  work_hour_type: z.enum(WORK_HOUR_CHOICES).optional().nullish().or(z.literal('')),
+  min_salary: z.number().positive('Must be positive').optional().nullish().or(z.literal('')),
+  max_salary: z.number().positive('Must be positive').optional().nullish().or(z.literal('')),
+  salary_type: z.enum(SALARY_TYPE_CHOICES).optional().nullish().or(z.literal('')),
+  currency: z.enum(CURRENCY_CHOICES).optional().nullish().or(z.literal('')),
+});
+
+const onImageChange = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (file) {
+    state.value.image = file
+  }
+}
+type Schema = z.infer<typeof schema>
+
 const modalTitle = computed(() => {
   switch (activeModal.value) {
     case 'company': return 'Add New Company'
@@ -87,48 +294,21 @@ const modalTitle = computed(() => {
   }
 })
 
-const openModal = (type: 'company' | 'category' | 'location') => {
-  activeModal.value = type
-  isModalOpen.value = true
-}
-
-const props = defineProps({
-  jobSlug: {
-    type: String,
-    default: null
-  }
-})
-
-const router = useRouter()
-const route = useRoute()
-const jobStore = useJobStore()
-const companyStore = useCompanyStore()
-const categoryStore = useCategoryStore()
-const locationStore = useLocationStore()
-const accountStore = useAccountStore()
-const emit = defineEmits(['jobCreated', 'jobUpdated'])
-
-const { companies } = storeToRefs(companyStore)
-const { categories } = storeToRefs(categoryStore)
-const { locations } = storeToRefs(locationStore)
-
-const fetchCompanies = async () => {
-  await companyStore.fetchCompanies()
-}
-
-const fetchCategories = async () => {
-  await categoryStore.fetchCategories()
-}
-
-const fetchLocations = async () => {
-  await locationStore.fetchLocations()
-}
+// const companyOptions = computed(() => {
+//   return (companies.value || []).map(company => ({
+//     label: company.name,
+//     value: company.id
+//   }));
+// });
 
 const companyOptions = computed(() => {
-  return (companies.value || []).map(company => ({
-    label: company.name,
-    value: company.id
-  }));
+  const currentUserEmail = accountStore.user?.email;
+  return (companies.value || [])
+    .filter(company => company.user?.email === currentUserEmail)
+    .map(company => ({
+      label: company.name,
+      value: company.id
+    }));
 });
 
 const categoryOptions = computed(() => {
@@ -147,32 +327,11 @@ const locationOptions = computed(() => {
   }));
 });
 
-const tiptapEditor = ref(null)
-const jobSlug = route.params.slug
 
-const state = ref({
-  company: null,
-  category: null,
-  location: null,
-  title: '',
-  description: '',
-});
-
-const schema = z.object({
-  title: z.string().min(4, 'Must be at least 4 characters'),
-  company: z.any(),
-  category: z.any(),
-  location: z.any(),
-  description: z.string().min(26, 'Must be at least 26 characters'),
-})
-
-type Schema = z.infer<typeof schema>
-
-const form = ref()
-const submitting = ref(false)
-const successMessage = ref('')
-const errorMessage = ref('')
-const showDetails = ref(false)
+const openModal = (type: 'company' | 'category' | 'location') => {
+  activeModal.value = type
+  isModalOpen.value = true
+}
 
 const checkAuth = () => {
   if (!accountStore.isLoggedIn) {
@@ -183,64 +342,48 @@ const checkAuth = () => {
 }
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
-  submitting.value = true;
-  errorMessage.value = '';
+  submitting.value = true
+  errorMessage.value = ''
 
-  const { data } = event;
+  const { data } = event
   try {
-    console.log('Form data:', data);
-    const formData = new FormData();
-    formData.append('title', data.title);
-    formData.append('company', data.company.value.toString());
-    formData.append('category', data.category.value.toString());
-    formData.append('location', data.location.value.toString());
-    formData.append('description', data.description);
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        formData.append(key, value instanceof Object ? value.value : value)
+      }
+    })
 
-    // If you have file inputs, append them here
-    // if (data.logo) formData.append('logo', data.logo);
-
-    console.log('FormData content:');
-    for (let pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
-    }
-
-    let response;
+    let response
     if (props.jobSlug) {
-      // Update existing job
-      response = await jobStore.updateJob(props.jobSlug, formData);
-      successMessage.value = 'Job vacancy updated successfully!';
-      emit('jobUpdated');
+      response = await jobStore.updateJob(props.jobSlug, formData)
+      successMessage.value = 'Job vacancy updated successfully!'
+      emit('jobUpdated')
     } else {
-      // Create new job
-      response = await jobStore.createJob(formData);
-      successMessage.value = 'Job vacancy added successfully!';
-      emit('jobCreated');
+      response = await jobStore.createJob(formData)
+      successMessage.value = 'Job vacancy added successfully!'
+      emit('jobCreated')
     }
 
-    errorMessage.value = '';
-    toast.add({ title: successMessage.value, type: 'success' });
-    clearForm();
+    toast.add({ title: successMessage.value, type: 'success' })
+    clearForm()
   } catch (error) {
-    console.error('Error submitting form:', error);
-    successMessage.value = '';
-    errorMessage.value = props.jobSlug ? 'Failed to update job vacancy.' : 'Failed to add job vacancy.';
-    toast.add({ title: errorMessage.value, type: 'error' });
+    console.error('Error submitting form:', error)
+    errorMessage.value = props.jobSlug
+      ? 'Failed to update job vacancy.'
+      : 'Failed to add job vacancy.'
+    toast.add({ title: errorMessage.value, type: 'error' })
   } finally {
-    submitting.value = false;
+    submitting.value = false
   }
-};
+}
 
 const fetchJobDetails = async () => {
   if (props.jobSlug) {
     await jobStore.fetchJob(props.jobSlug)
     if (jobStore.job) {
-      state.value = {
-        title: jobStore.job.title,
-        company: { label: jobStore.job.get_company.name, value: jobStore.job.get_company.id },
-        category: { label: jobStore.job.get_category, value: jobStore.job.category },
-        location: { label: jobStore.job.get_location, value: jobStore.job.location },
-        description: jobStore.job.description,
-      }
+      Object.assign(state.value, jobStore.job)
+      state.value.description = jobStore.job.description || ''
       showDetails.value = true
     }
   } else {
@@ -248,38 +391,33 @@ const fetchJobDetails = async () => {
   }
 }
 
-
-
-
 const clearForm = () => {
-  state.value = {
-    company: null,
-    category: null,
-    location: null,
-    title: '',
-    description: '',
-  };
+  Object.keys(state.value).forEach(key => {
+    state.value[key] = null
+  })
+  state.value.title = ''
+  state.value.description = ''
   showDetails.value = false
-  if (tiptapEditor.value && tiptapEditor.value.editor) {
+  if (tiptapEditor.value?.editor) {
     tiptapEditor.value.editor.commands.clearContent()
   }
 }
 
-const handleCompanyAdded = async (newCompany) => {
+const handleCompanyAdded = async () => {
   await companyStore.fetchCompanies()
   isModalOpen.value = false
   const addedCompany = companies.value[companies.value.length - 1]
   state.value.company = { label: addedCompany.name, value: addedCompany.id }
 }
 
-const handleCategoryAdded = async (newCategory) => {
+const handleCategoryAdded = async () => {
   await categoryStore.fetchCategories()
   isModalOpen.value = false
   const addedCategory = categories.value[categories.value.length - 1]
   state.value.category = { label: addedCategory.name, value: addedCategory.id }
 }
 
-const handleLocationAdded = async (newLocation) => {
+const handleLocationAdded = async () => {
   await locationStore.fetchLocations()
   isModalOpen.value = false
   const addedLocation = locations.value[locations.value.length - 1]
@@ -290,8 +428,10 @@ watch(() => props.jobSlug, fetchJobDetails, { immediate: true })
 
 onMounted(async () => {
   await fetchJobDetails()
-  await fetchCompanies()
-  await fetchCategories()
-  await fetchLocations()
+  await Promise.all([
+    companyStore.fetchCompanies(),
+    categoryStore.fetchCategories(),
+    locationStore.fetchLocations()
+  ])
 })
 </script>
