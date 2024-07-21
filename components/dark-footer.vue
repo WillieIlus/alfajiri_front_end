@@ -24,9 +24,19 @@
           &copy; {{ currentYear }} Alfajirijobs. All Rights Reserved
         </div>
         <div class="flex-auto flex justify-end space-x-4">
-          <nuxt-link to="https://facebook.com">
+          <nuxt-link to="https://chat.whatsapp.com/Jp0eo37AkAp95mU8rilVz6">
+            <div class="bg-gray-800 py-2 px-3 rounded-full">
+              <UIcon name="i-fa6-brands:whatsapp" class="text-gray-200" dynamic />
+            </div>
+          </nuxt-link>
+          <nuxt-link to="https://web.facebook.com/people/Alfajiri-Jobs/61555927490320/">
             <div class="bg-gray-800 py-2 px-3 rounded-full">
               <UIcon name="i-fa6-brands:facebook-f" class="text-gray-200" dynamic />
+            </div>
+          </nuxt-link>
+          <nuxt-link to="https://www.instagram.com/alfajirijobs/">
+            <div class="bg-gray-800 py-2 px-3 rounded-full">
+              <UIcon name="i-fa6-brands:instagram" class="text-gray-200" dynamic />
             </div>
           </nuxt-link>
           <nuxt-link to="https://x.com">
@@ -34,19 +44,9 @@
               <UIcon name="i-fa6-brands:x-twitter" class="text-gray-200" dynamic />
             </div>
           </nuxt-link>
-          <nuxt-link to="https://instagram.com">
-            <div class="bg-gray-800 py-2 px-3 rounded-full">
-              <UIcon name="i-fa6-brands:instagram" class="text-gray-200" dynamic />
-            </div>
-          </nuxt-link>
           <nuxt-link to="https://linkedin.com">
             <div class="bg-gray-800 py-2 px-3 rounded-full">
               <UIcon name="i-fa6-brands:linkedin-in" class="text-gray-200" dynamic />
-            </div>
-          </nuxt-link>
-          <nuxt-link to="https://youtube.com">
-            <div class="bg-gray-800 py-2 px-3 rounded-full">
-              <UIcon name="i-fa6-brands:youtube" class="text-gray-200" dynamic />
             </div>
           </nuxt-link>
         </div>
