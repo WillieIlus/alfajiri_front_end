@@ -76,47 +76,44 @@ export const useAccountStore = defineStore('account', {
       await jobStore.fetchJobs();
     },
 
-    async getUser() {
-      const response = await fetch(`${BASE_URL}/accounts/users/me/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.token}`
-        }
-      })
-      const data = await response.json()
-      this.user = data
-    },
-
-    async getUserById() {
-      const id = this.user.id
-      const response = await fetch(`${BASE_URL}/accounts/${id}/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.token}`
-        }
-      })
-      const data = await response.json()
-      this.userById = data
-    },
-
-    async updateUser(data) {
+    async updateUser(userData) {
       try {
-        const response = await fetch(`${BASE_URL}/accounts/users/me/`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`
-          },
-          body: data,
-        });
-        if (!response.ok) {
-          throw new Error('Server responded with ' + response.status);
+        this.loading = true;
+        this.error = null;
+
+        let body;
+        let headers = {
+          'Authorization': `Bearer ${this.token}`
+        };
+
+        if (userData instanceof FormData) {
+          body = userData;
+        } else {
+          body = JSON.stringify(userData);
+          headers['Content-Type'] = 'application/json';
         }
-        const responseData = await response.json();
+
+        const response = await fetch(`${BASE_URL}/accounts/me/`, {
+          method: 'PATCH',
+          headers: headers,
+          body: body,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(JSON.stringify(errorData));
+        }
+
+        const updatedUser = await response.json();
+        this.user = updatedUser;
+        this.token = updatedUser.token;
+        return updatedUser;
       } catch (error) {
-        console.error('Error submitting form:', error);
+        this.error = error.message;
+        console.error('Error updating user:', error);
+        throw error;
+      } finally {
+        this.loading = false;
       }
     },
 

@@ -90,7 +90,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     console.log('Submitting login...')
     await accountStore.login(data.email, data.password)
     console.log('Login successful')
-    router.push('/')
+    router.push('/accounts/dashboard')
   } catch (err: any) {
     console.error(err)
     if (err.response && err.response.status === 401) {

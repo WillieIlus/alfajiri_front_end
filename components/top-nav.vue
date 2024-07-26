@@ -18,7 +18,9 @@
 
           <div class="flex flex-col sm:flex-row items-center gap-2">
             <div v-if="isLoggedIn" class="flex justify-center items-center gap-4">
-              <span class="px-4">Hi {{ user?.first_name || 'user' }}</span>
+              <span class="px-4">Hi <ULink to="/accounts/dashboard" active-class="text-primary"
+                  inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                  {{ user?.first_name || 'user' }}</ULink></span>
               <span>
                 <Logout />
               </span>
@@ -38,15 +40,17 @@
   <!-- modal  -->
   <UModal v-model="isModalOpen">
     <UCard>
-        <template #header>
-          <NuxtLink to="/">
-            <img src="assets/images/Logo.png" class="mx-auto h-[24px] block dark:hidden" alt="">
-            <img src="assets/images/logo-white.png" class="mx-auto h-[24px] dark:block hidden" alt="">
-          </NuxtLink>
-          <h3 class="my-6 text-xl font-semibold">Login</h3>
-        </template>
-        <LoginForm v-if="activeModal === 'login'" @login-successful="handleLogin" @open-signup-modal="switchToSignupModal"/>
-      <SignupForm v-else-if="activeModal === 'signup'" @signup-successful="handleSignup" @open-login-modal="switchToLoginModal" />
+      <template #header>
+        <NuxtLink to="/">
+          <img src="assets/images/Logo.png" class="mx-auto h-[24px] block dark:hidden" alt="">
+          <img src="assets/images/logo-white.png" class="mx-auto h-[24px] dark:block hidden" alt="">
+        </NuxtLink>
+        <h3 class="my-6 text-xl font-semibold">Login</h3>
+      </template>
+      <LoginForm v-if="activeModal === 'login'" @login-successful="handleLogin"
+        @open-signup-modal="switchToSignupModal" />
+      <SignupForm v-else-if="activeModal === 'signup'" @signup-successful="handleSignup"
+        @open-login-modal="switchToLoginModal" />
     </UCard>
   </UModal>
 </template>
@@ -131,7 +135,7 @@ const switchToSignupModal = () => {
 }
 
 onMounted(() => {
-  accountStore.getUser()
+  accountStore.fetchCurrentUser()
 })
 </script>
 

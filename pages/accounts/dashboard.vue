@@ -1,51 +1,32 @@
 <template>
-  <breadcrumbs/>
-  <div v-if="loading" ></div>
-  <div v-else-if="error">{{ error }}</div>
-  <div v-else>
-    <div v-if="user">
-      Hello {{ user.first_name || '' }} {{ user.last_name || '' }}
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-4">User Profile</h1>
+    <div v-if="loading" class="text-center">
+      <p class="text-gray-600">Loading user data...</p>
     </div>
-    <div v-else="userById">
-      Welcome {{ userById.first_name || '' }} {{ userById.last_name || '' }}
-    </div>
+    <UpdateUserForm v-else />
   </div>
 </template>
+
 <script setup>
-import { onMounted, ref } from 'vue'
+import { useAccountStore } from '@/store/accounts'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
-import { useAccountStore } from '~/store/accounts'
-
-const router = useRouter()
 const accountStore = useAccountStore()
+const router = useRouter()
+const { loading } = storeToRefs(accountStore)
 
-const { user, userById, loading, error } = storeToRefs(accountStore)
-
-
-const editProfile = () => {
-  router.push('/accounts/profile')
-}
-
-const changePassword = () => {
-  router.push('/accounts/change-password')
-}
-
-const getUserById = async () => {
-  await accountStore.getUserById()
-}
-
-const getUser = async () => {
-  await accountStore.getUser()
-}
-
-onMounted(() => {
+onMounted(async () => {
   if (!accountStore.isLoggedIn) {
     router.push('/login')
+  } else {
+    try {
+      await accountStore.fetchCurrentUser()
+    } catch (error) {
+      console.error('Failed to fetch user data:', error)
+      // You might want to show an error message here
+    }
   }
-  getUserById()
-  getUser()
 })
-
 </script>

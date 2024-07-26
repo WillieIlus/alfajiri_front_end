@@ -17,7 +17,7 @@ const { user } = storeToRefs(accountStore);
 
 onMounted(async () => {
 
-  await accountStore.getUser();
+  await accountStore.fetchCurrentUser();
 
 });
 </script>
