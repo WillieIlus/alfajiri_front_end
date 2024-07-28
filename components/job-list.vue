@@ -24,7 +24,6 @@
                     </NuxtLink>
                   </div>
                   <div class="flex items-center justify-center md:ml-auto gap-2">
-                    <BookmarkButton :job-slug="job.slug" />
                     <UButton :to="`/${job.slug}`" color="primary">
                       View Details
                     </UButton>
@@ -76,11 +75,8 @@
 import { useRouter } from 'vue-router'
 import noLogo from '~/assets/images/no-image-01.jpg'
 import { useAccountStore } from '~/store/accounts'
-import { useBookmarkStore } from '~/store/bookmarkStore'
 import { storeToRefs } from 'pinia'
 
-
-const bookmarkStore = useBookmarkStore()
 const accountStore = useAccountStore()
 const { user } = storeToRefs(accountStore)
 const refreshing = ref(false)
@@ -112,8 +108,7 @@ const props = defineProps({
 const emit = defineEmits(['incrementItemsPerPage', 'editJob', 'refreshData'])
 
 onMounted(async () => {
-  await accountStore.fetchCurrentUser(),
-  await bookmarkStore.fetchBookmarks()
+  await accountStore.fetchCurrentUser()
 })
 
 </script>

@@ -64,35 +64,38 @@ const getNextId = computed(() => {
 
 const onLogoChange = (e: Event) => {
   const target = e.target as HTMLInputElement
-  if (target.files) {
+  if (target && target.files && target.files.length > 0) {
     logo.value = target.files[0]
   }
 }
 
-const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+const onSubmit = async ({ data }: FormSubmitEvent<Schema>) => {
   submitting.value = true
   errorMessage.value = ''
   successMessage.value = ''
 
-  const { name, description, phone, email } = event.data
-  const id = getNextId.value
+  const localId = getNextId.value
 
   try {
-    const data = new FormData()
-    data.append('id', id.toString())
-    data.append('name', name)
-    data.append('description', description || '')
-    data.append('phone', phone || '')
-    data.append('email', email)
+    const formData = new FormData()
+
+    // Add all form fields to formData
+    Object.keys(data).forEach(key => {
+      if (key !== 'id') { // Skip the 'id' field when sending to backend
+        formData.append(key, data[key])
+      }
+    })
+    
+    // Add the logo if it exists
     if (logo.value) {
-      data.append('logo', logo.value)
+      formData.append('logo', logo.value)
     }
 
-    console.log('FormData:', data)
-    const newCompany = await companyStore.createCompany(data)
+    const newCompany = await companyStore.createCompany(formData)
 
+    // Use the localId for the emit, but the actual data from the server response
     successMessage.value = 'Company created successfully'
-    emit('company-added', { ...newCompany, id })
+    emit('company-added', { ...newCompany, id: localId })
 
     // Reset form
     state.value = {

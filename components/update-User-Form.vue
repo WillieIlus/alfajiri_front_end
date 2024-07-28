@@ -1,4 +1,5 @@
 <template>
+  <UContainer>
   <form @submit.prevent="updateUserProfile" class="space-y-4">
     <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
       <strong class="font-bold">Error!</strong>
@@ -34,12 +35,16 @@
       </button>
     </div>
   </form>
+  </UContainer>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useAccountStore } from '@/store/accounts'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const accountStore = useAccountStore()
 const { loading, error } = storeToRefs(accountStore)
@@ -81,6 +86,7 @@ const updateUserProfile = async () => {
 
     await accountStore.updateUser(formData)
     success.value = 'Profile updated successfully!'
+    router.push('/')
   } catch (err) {
     error.value = 'Failed to update profile. Please try again.'
   }

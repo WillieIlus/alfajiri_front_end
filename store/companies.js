@@ -4,7 +4,7 @@ import { useAccountStore } from './accounts'
 
 export const useCompanyStore = defineStore('company', {
   state: () => ({
-    companies: null,
+    companies: [],
     company: null,
     loading: false,
     error: null,
@@ -75,32 +75,36 @@ export const useCompanyStore = defineStore('company', {
         this.loading = false;
       }
     },
+
     async createCompany(data) {
+      this.loading = true
       try {
-        const accountStore = useAccountStore();
-        const token = accountStore.token;
+        const accountStore = useAccountStore()
+        const token = accountStore.token
         const headers = {
           'Authorization': 'Bearer ' + token,
-        };
-        console.log('Sending data to server: ', data);
+        }
         const response = await fetch(`${BASE_URL}/companies/`, {
           method: 'POST',
           headers: headers,
           body: data,
-        });
+        })
         if (!response.ok) {
-          const error = await response.json();
-          throw new Error('Server responded with ' + response.status);
+          const error = await response.json()
+          throw new Error('Server responded with ' + response.status)
         }
-        const responseData = await response.json();
+        const responseData = await response.json()
         this.companies.push(responseData)
         await this.fetchCompanies()
+        return responseData
       } catch (error) {
         this.error = error
-      } finally{
+        throw error
+      } finally {
         this.loading = false
       }
     },
+
     async fetchCompany(slug) {
       this.loading = true;
       await this.handleError(async () => {

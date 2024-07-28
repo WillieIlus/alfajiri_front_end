@@ -2,10 +2,12 @@ import { defineStore } from 'pinia'
 import { BASE_URL } from './base'
 import { useAccountStore } from './accounts'
 
+
 export const useJobStore = defineStore('job', {
   state: () => ({
     jobs: [],
     relatedJobs: [],
+    bookmarks: [],
     currentPage: 1,
     itemsPerPage: 10,
     job: null,
@@ -36,44 +38,6 @@ export const useJobStore = defineStore('job', {
     async fetchJobs({ title = '', location = '', category = '', company = '', min_salary = '', max_salary = '', job_type = '', vacancies = '' } = {}) {
       await this.handleError(async () => {
         const response = await fetch(`${BASE_URL}/jobs`);
-        const data = await response.json();
-        this.jobs = data;
-      });
-    },
-
-    async fetchMyJobs() {
-      await this.handleError(async () => {
-        const accountStore = useAccountStore();
-        const response = await fetch(`${BASE_URL}/jobs/my`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accountStore.token}`,
-          },
-        });
-        const data = await response.json();
-        this.jobs = data;
-      });
-    },
-
-    async fetchJobsByCategory(slug) {
-      await this.handleError(async () => {
-        const response = await fetch(`${BASE_URL}/jobs/category/${slug}`);
-        const data = await response.json();
-        this.jobs = data;
-      });
-    },
-
-    async fetchJobsByCompany(slug) {
-      await this.handleError(async () => {
-        const response = await fetch(`${BASE_URL}/jobs/company/${slug}`);
-        const data = await response.json();
-        this.jobs = data;
-      });
-    },
-
-    async fetchJobsByLocation(slug) {
-      await this.handleError(async () => {
-        const response = await fetch(`${BASE_URL}/jobs/location/${slug}`);
         const data = await response.json();
         this.jobs = data;
       });
@@ -158,6 +122,53 @@ export const useJobStore = defineStore('job', {
     setCurrentPage(page) {
       const totalPages = Math.ceil(this.jobs.length / this.itemsPerPage);
       this.currentPage = Math.max(1, Math.min(totalPages, page));
+    },
+    
+    async fetchBookmarks() {
+      await this.handleError(async () => {
+        const accountStore = useAccountStore();
+        const token = accountStore.token;
+        const headers = {
+          'Authorization': 'Bearer ' + token
+        };
+        const response = await fetch(`${BASE_URL}/jobs/bookmarks/`, {
+          headers: headers
+        });
+        const data = await response.json();
+        this.bookmarks = data;
+      });
+    },
+
+    async addBookmark(jobId) {
+      await this.handleError(async () => {
+        const accountStore = useAccountStore();
+        const token = accountStore.token;
+        const headers = {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        };
+        const response = await fetch(`${BASE_URL}/jobs/bookmark/${jobId}/`, {
+          method: 'POST',
+          headers: headers
+        });
+        const data = await response.json();
+        this.bookmarks.push(data);
+      });
+    },
+
+    async removeBookmark(jobId) {
+      await this.handleError(async () => {
+        const accountStore = useAccountStore();
+        const token = accountStore.token;
+        const headers = {
+          'Authorization': 'Bearer ' + token
+        };
+        await fetch(`${BASE_URL}/jobs/unbookmark/${jobId}/`, {
+          method: 'DELETE',
+          headers: headers
+        });
+        this.bookmarks = this.bookmarks.filter(bookmark => bookmark.job !== jobId);
+      });
     },
   },
 })
