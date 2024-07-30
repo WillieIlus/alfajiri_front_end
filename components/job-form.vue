@@ -1,5 +1,5 @@
 <template>
-  <UCard>
+  <UCard class="mb-6">
     <h2 class="mb-4 font-bold text-2xl">{{ jobSlug ? 'Update Job Vacancy' : 'Add a new Job Vacancy' }}</h2>
     <UForm ref="form" :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
       <UFormGroup name="title" label="Title">
