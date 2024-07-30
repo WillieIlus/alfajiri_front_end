@@ -20,6 +20,7 @@
           <JobList :jobs="paginatedJobs" :loading="loading" :error="error" :hasMoreItems="hasMoreItems"
             :refreshing="refreshing" @incrementItemsPerPage="incrementItemsPerPage" @editJob="editJob"
             @refreshData="refreshData" />
+
         </div>
       </div>
     </CustomContainer>
@@ -55,7 +56,7 @@ const incrementItemsPerPage = () => {
 }
 
 const hasMoreItems = computed(() => {
-  return jobStore.itemsPerPage < jobStore.totaljobs
+  return jobStore.itemsPerPage < jobStore.totalJobs
 })
 
 const fetchJobs = async () => {
