@@ -33,7 +33,7 @@
                   </div>
                   <div class="flex flex-wrap gap-4 text-sm">
                     <span class="flex items-center">
-                      <UIcon name="i-heroicons-adjustments-horizontal-20-solid"
+                      <UIcon name="i-heroicons-briefcase-20-solid"
                         class="w-5 h-5 mr-2 text-torea-bay-400" />
                       {{ job?.get_category || ' ' }}
                     </span>
@@ -48,6 +48,11 @@
                     <span class="flex items-center">
                       <UIcon name="i-heroicons-bookmark-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
                       {{ job?.bookmarks || '0' }}
+                    </span>
+                    
+                    <span class="flex items-center">
+                      <UIcon name="i-heroicons-users-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
+                      {{ job?.vacancies || '1' }}
                     </span>
                   </div>
                   <div class="text-torea-bay-500 dark:text-torea-bay-300  max-w-none">
