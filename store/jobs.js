@@ -73,9 +73,10 @@ export const useJobStore = defineStore('job', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data),
+          body: data,
+          // body: JSON.stringify(data),
         });
         if (!response.ok) throw new Error('Failed to create job');
         const newJob = await response.json();
