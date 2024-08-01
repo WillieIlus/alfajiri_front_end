@@ -73,10 +73,8 @@ export const useJobStore = defineStore('job', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
-            // 'Content-Type': 'application/json',
           },
           body: data,
-          // body: JSON.stringify(data),
         });
         if (!response.ok) throw new Error('Failed to create job');
         const newJob = await response.json();
@@ -120,6 +118,25 @@ export const useJobStore = defineStore('job', {
         if (this.job && this.job.slug === slug) {
           this.job = null;
         }
+      });
+    },
+
+    async applyForJob(jobId, data) {
+      await this.handleError(async () => {
+        const accountStore = useAccountStore();
+        const token = accountStore.token;
+        const response = await fetch(`${BASE_URL}/jobs/apply/${jobId}/`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            // Don't set Content-Type when sending FormData
+          },
+          body: data, // This should be a FormData object
+        });
+        if (!response.ok) throw new Error('Failed to apply for the job');
+        const newAppliedJob = await response.json();
+        // You might want to update some state here, e.g.:
+        // this.appliedJobs.push(newAppliedJob);
       });
     },
 
