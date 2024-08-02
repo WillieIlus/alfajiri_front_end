@@ -33,66 +33,65 @@
           </div>
         </div>
 
+        <div class="flex flex-wrap">
+          <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <UFormGroup class="flex-auto" size="xl" name="email" label="Email">
+              <UInput v-model="state.email" placeholder="Enter email" />
+            </UFormGroup>
+          </div>
+
+          <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <UFormGroup class="flex-auto" size="xl" name="vacancies" label="Vacancies">
+              <UInput v-model="state.vacancies" type="number" placeholder="Available positions" />
+            </UFormGroup>
+          </div>
+
+          <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <UFormGroup class="flex-auto" size="xl" name="address" label="Address">
+              <UInput v-model="state.address" placeholder="Enter Specific Location" />
+            </UFormGroup>
+          </div>
+        </div>
+
         <UFormGroup name="description" label="Description">
           <TiptapEditor ref="tiptapEditor" :modelValue="state.description"
             @update:modelValue="(newValue) => state.description = newValue" />
         </UFormGroup>
-
         <div v-if="jobSlug">
           <div class="flex flex-wrap">
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="job_type" label="Job Type">
                 <USelect v-model="state.job_type" :options="JOB_TYPE_CHOICES" />
               </UFormGroup>
             </div>
 
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" name="image" label="Poster" size="xl">
                 <UInput type="file" @change="onImageChange" accept="image/*" />
               </UFormGroup>
             </div>
 
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
-              <UFormGroup class="flex-auto" size="xl" name="address" label="Address">
-                <UInput v-model="state.address" placeholder="Enter Specific Location" />
+            <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+              <UFormGroup class="flex-auto" size="xl" name="work_experience" label="Work Experience">
+                <UInput v-model="state.work_experience" placeholder="Required work experience" />
               </UFormGroup>
             </div>
           </div>
 
           <div class="flex flex-wrap">
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
-              <UFormGroup class="flex-auto" size="xl" name="email" label="Email">
-                <UInput v-model="state.email" placeholder="Enter email" />
-              </UFormGroup>
-            </div>
-
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="website" label="Website">
                 <UInput v-model="state.website" placeholder="Enter website" />
               </UFormGroup>
             </div>
 
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="phone" label="Phone">
                 <UInput v-model="state.phone" placeholder="Enter phone" />
               </UFormGroup>
             </div>
-          </div>
 
-          <div class="flex flex-wrap">
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
-              <UFormGroup class="flex-auto" size="xl" name="vacancies" label="Vacancies">
-                <UInput v-model="state.vacancies" placeholder="Available vacant positions" />
-              </UFormGroup>
-            </div>
-
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
-              <UFormGroup class="flex-auto" size="xl" name="work_experience" label="Work Experience">
-                <UInput v-model="state.work_experience" placeholder="Required work experience" />
-              </UFormGroup>
-            </div>
-
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="work_hours" label="Work Hours">
                 <UInput v-model="state.work_hours" placeholder="Duration of work" />
               </UFormGroup>
@@ -100,19 +99,19 @@
           </div>
 
           <div class="flex flex-wrap">
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="work_hour_type" label="Work Hour Type">
                 <USelect v-model="state.work_hour_type" :options="WORK_HOUR_CHOICES" />
               </UFormGroup>
             </div>
 
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="min_salary" label="Min Salary">
                 <UInput v-model="state.min_salary" placeholder="Minimum salary" />
               </UFormGroup>
             </div>
 
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="max_salary" label="Max Salary">
                 <UInput v-model="state.max_salary" placeholder="Maximum salary" />
               </UFormGroup>
@@ -120,19 +119,20 @@
           </div>
 
           <div class="flex flex-wrap">
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <div class="w-full md:w-1/2 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="salary_type" label="Salary Type">
                 <USelect v-model="state.salary_type" :options="SALARY_TYPE_CHOICES" />
               </UFormGroup>
             </div>
 
-            <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
+            <div class="w-full md:w-1/2 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="currency" label="Currency">
                 <USelect v-model="state.currency" :options="CURRENCY_CHOICES" />
               </UFormGroup>
             </div>
           </div>
         </div>
+
         <div class="pt-4">
           <UButton type="submit" :disabled="submitting">
             {{ jobSlug ? 'Update' : 'Submit' }}
@@ -221,7 +221,6 @@ const state = ref({
   currency: '',
 })
 
-
 const JOB_TYPE_CHOICES = [
   { label: 'Full Time', value: 'Full Time' },
   { label: 'Part Time', value: 'Part Time' },
@@ -261,20 +260,20 @@ const schema = z.object({
   description: z.string().min(26, 'Must be at least 26 characters'),
   category: z.any().optional().nullish().or(z.literal('')),
   location: z.any().optional().nullish().or(z.literal('')),
-  job_type: z.enum(JOB_TYPE_CHOICES).optional().nullish().or(z.literal('')),
+  job_type: z.enum(JOB_TYPE_CHOICES.map(choice => choice.value)).optional().nullish().or(z.literal('')),
   image: z.any().optional().nullish().or(z.literal('')),
   address: z.string().optional().nullish().or(z.literal('')),
-  email: z.string().email('Invalid email').optional().nullish().or(z.literal('')),
+  email: z.string().email('Invalid email'),
   website: z.string().url('Invalid URL').optional().nullish().or(z.literal('')),
   phone: z.string().optional().nullish().or(z.literal('')),
   vacancies: z.number().int('Must be an integer').positive('Must be positive').optional().nullish().or(z.literal('')),
   work_experience: z.number().int('Must be an integer').nonnegative('Must be non-negative').optional().nullish().or(z.literal('')),
   work_hours: z.number().int('Must be an integer').positive('Must be positive').optional().nullish().or(z.literal('')),
-  work_hour_type: z.enum(WORK_HOUR_CHOICES).optional().nullish().or(z.literal('')),
+  work_hour_type: z.enum(WORK_HOUR_CHOICES.map(choice => choice.value)).optional().nullish().or(z.literal('')),
   min_salary: z.number().positive('Must be positive').optional().nullish().or(z.literal('')),
   max_salary: z.number().positive('Must be positive').optional().nullish().or(z.literal('')),
-  salary_type: z.enum(SALARY_TYPE_CHOICES).optional().nullish().or(z.literal('')),
-  currency: z.enum(CURRENCY_CHOICES).optional().nullish().or(z.literal('')),
+  salary_type: z.enum(SALARY_TYPE_CHOICES.map(choice => choice.value)).optional().nullish().or(z.literal('')),
+  currency: z.enum(CURRENCY_CHOICES.map(choice => choice.value)).optional().nullish().or(z.literal('')),
 });
 
 const onImageChange = (event: Event) => {
@@ -284,6 +283,7 @@ const onImageChange = (event: Event) => {
     state.value.image = file
   }
 }
+
 type Schema = z.infer<typeof schema>
 
 const modalTitle = computed(() => {
@@ -295,12 +295,6 @@ const modalTitle = computed(() => {
   }
 })
 
-// const companyOptions = computed(() => {
-//   return (companies.value || []).map(company => ({
-//     label: company.name,
-//     value: company.id
-//   }));
-// });
 
 const companyOptions = computed(() => {
   const currentUserEmail = accountStore.user?.email;
