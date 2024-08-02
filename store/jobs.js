@@ -125,15 +125,27 @@ export const useJobStore = defineStore('job', {
       await this.handleError(async () => {
         const accountStore = useAccountStore();
         const token = accountStore.token;
+        
+        const formData = new FormData();
+        formData.append('cover_letter', data.cover_letter);
+        if (data.resume) {
+          formData.append('resume', data.resume);
+        }
+        // We don't need to append jobId here as it's part of the URL
+    
         const response = await fetch(`${BASE_URL}/jobs/apply/${jobId}/`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
-            // Don't set Content-Type when sending FormData
           },
-          body: data, // This should be a FormData object
+          body: formData,
         });
-        if (!response.ok) throw new Error('Failed to apply for the job');
+    
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to apply for the job');
+        }
+    
         const newAppliedJob = await response.json();
         // You might want to update some state here, e.g.:
         // this.appliedJobs.push(newAppliedJob);

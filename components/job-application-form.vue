@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <UForm ref="form" :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormGroup name="cover_letter" label="Cover Letter">
       <UTextarea v-model="state.cover_letter" placeholder="Enter your cover letter" />
@@ -19,19 +19,17 @@ import type { FormSubmitEvent } from '#ui/types'
 import { useJobStore } from '~/store/jobs'
 import { storeToRefs } from 'pinia'
 
-const props = defineProps<{
-  jobId: number
-}>()
-
 const jobStore = useJobStore()
 const { loading, error } = storeToRefs(jobStore)
 
 const emit = defineEmits(['application-submitted'])
-
-
 const successMessage = ref('')
 const errorMessage = ref('')
 const submitting = ref(false)
+
+const props = defineProps<{
+  jobId: number
+}>()
 
 const resume = ref<File | null>(null)
 
@@ -59,11 +57,9 @@ const onSubmit = async ({ data }: FormSubmitEvent<Schema>) => {
   successMessage.value = ''
 
   try {
-    const formData = new FormData()
-
-    formData.append('cover_letter', data.cover_letter)
-    if (resume.value) {
-      formData.append('resume', resume.value)
+    const formData = {
+      cover_letter: data.cover_letter,
+      resume: resume.value
     }
 
     await jobStore.applyForJob(props.jobId, formData)
@@ -71,9 +67,8 @@ const onSubmit = async ({ data }: FormSubmitEvent<Schema>) => {
     successMessage.value = 'Application submitted successfully'
     emit('application-submitted')
 
-    state.value = {
-      cover_letter: '',
-    }
+    // Reset form
+    state.value = { cover_letter: '' }
     resume.value = null
 
     setTimeout(() => {
@@ -86,64 +81,5 @@ const onSubmit = async ({ data }: FormSubmitEvent<Schema>) => {
     submitting.value = false
   }
 }
-</script> -->
 
-<template>
-  <div>
-    <UButton
-      @click="showModal = true"
-      :disabled="loading"
-    >
-      Apply for Job
-    </UButton>
-
-    <UModal v-model="showModal">
-      <UCard>
-        <template #header>
-          <h3 class="text-lg font-semibold">Apply for {{ job.title }}</h3>
-        </template>
-        <JobApplicationForm 
-          :job-id="job.id" 
-          @application-submitted="onApplicationSubmitted"
-        />
-      </UCard>
-    </UModal>
-
-    <UNotification
-      v-model="showNotification"
-      :title="notificationTitle"
-      :description="notificationDescription"
-      :type="notificationType"
-    />
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-import { useJobStore } from '~/store/jobs'
-import { storeToRefs } from 'pinia'
-
-const props = defineProps({
-  job: {
-    type: Object,
-    required: true
-  }
-})
-
-const jobStore = useJobStore()
-const { loading } = storeToRefs(jobStore)
-
-const showModal = ref(false)
-const showNotification = ref(false)
-const notificationTitle = ref('')
-const notificationDescription = ref('')
-const notificationType = ref('success')
-
-const onApplicationSubmitted = () => {
-  showModal.value = false
-  notificationTitle.value = 'Application Submitted'
-  notificationDescription.value = `Your application for ${props.job.title} has been submitted successfully.`
-  notificationType.value = 'success'
-  showNotification.value = true
-}
 </script>

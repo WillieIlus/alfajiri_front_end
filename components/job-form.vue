@@ -221,6 +221,7 @@ const state = ref({
   currency: '',
 })
 
+
 const JOB_TYPE_CHOICES = [
   { label: 'Full Time', value: 'Full Time' },
   { label: 'Part Time', value: 'Part Time' },
