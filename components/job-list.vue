@@ -33,30 +33,36 @@
                   </div>
                   <div class="flex flex-wrap gap-4 text-sm">
                     <span class="flex items-center">
-                      <UIcon name="i-heroicons-briefcase-20-solid"
-                        class="w-5 h-5 mr-2 text-torea-bay-400" />
-                      {{ job?.get_category || ' ' }}
-                    </span>
-                    <span class="flex items-center">
                       <UIcon name="i-heroicons-map-pin-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
                       {{ job?.address ? job.address + ', ' : '' }}{{ job?.get_location || ' ' }}
                     </span>
                     <span class="flex items-center">
                       <UIcon name="i-heroicons-eye-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
-                      {{ job?.view_count || '1' }}
+                      Views: {{ job?.view_count || '1' }}
                     </span>
                     <span class="flex items-center">
-                      <UIcon name="i-heroicons-bookmark-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
-                      {{ job?.bookmarks || '0' }}
+                      <UIcon name="i-heroicons-heart-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
+                      Bookmarks: {{ job?.bookmarks || '0' }}
                     </span>
-                    
-                    <span class="flex items-center">
+                    <span v-if="job.applicants_count" class="flex items-center">
                       <UIcon name="i-heroicons-users-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
-                      {{ job?.vacancies || '1' }}
+                      applicants: {{ job?.applicants || '' }}
+                    </span>
+                  </div>
+
+                  <div class="flex flex-wrap gap-4 text-sm">
+                    <span class="flex items-center">
+                      <UBadge color="primary" variant="soft">{{ job?.get_category || ' ' }}</UBadge>
+                    </span>
+                    <span class="flex items-center">
+                      <UBadge color="orange" variant="soft">{{ job?.job_type || ' ' }}</UBadge>
+                    </span>
+                    <span class="flex items-center">
+                      <UBadge color="primary" variant="soft"> vacancies: {{ job?.vacancies || '1' }}</UBadge>
                     </span>
                   </div>
                   <div class="text-torea-bay-500 dark:text-torea-bay-300  max-w-none">
-                    <p v-html="job?.truncated_description || '&nbsp;'" ></p>
+                    <p v-html="job?.truncated_description || '&nbsp;'"></p>
                   </div>
                 </div>
               </div>
@@ -67,9 +73,8 @@
                     class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200">
                     <BookmarkButton :job-post="job" />
                   </div>
-                  <UButton :to="`/${job.slug}`" color="primary" size="sm">
-                    View Details
-                  </UButton>
+                  <UButton label="apply for job" icon="i-heroicons-clipboard-document-list" size="sm" color="primary"
+                    variant="solid" @click="openModal(job)" :disabled="loading" />
                   <UButton v-if="job.get_user === user.email" @click="$emit('editJob', job.slug)" color="yellow"
                     size="sm">
                     Edit
@@ -80,6 +85,18 @@
           </UCard>
         </li>
       </ul>
+
+      <UModal v-if="selectedJob" v-model="showModal">
+        <UCard>
+          <template #header>
+            <h3 class="text-lg font-semibold">Apply for {{ selectedJob.title }}</h3>
+          </template>
+          <JobApplicationForm :job-id="selectedJob.id" @application-submitted="onApplicationSubmitted" />
+          <!-- <JobApplicationForm :job="selectedJob" @application-submitted="onApplicationSubmitted" /> -->
+        </UCard>
+      </UModal>
+
+
       <div v-if="hasMoreItems" class="mt-8 text-center">
         <UButton @click="$emit('incrementItemsPerPage')" color="primary" variant="outline">
           Load More
@@ -103,6 +120,10 @@ const refreshing = ref(false)
 const router = useRouter()
 
 const props = defineProps({
+  // jobId: {
+  //   type: [Number, String],
+  //   required: true
+  // },
   jobs: {
     type: Array,
     default: () => []
@@ -125,7 +146,19 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['incrementItemsPerPage', 'editJob', 'refreshData'])
+const showModal = ref(false)
+const selectedJob = ref(null)
+
+const openModal = (job) => {
+  selectedJob.value = job
+  showModal.value = true
+}
+const onApplicationSubmitted = () => {
+  showModal.value = false
+  emit('refresh-job-data')
+}
+
+const emit = defineEmits(['incrementItemsPerPage', 'editJob', 'refreshData', 'refresh-job-data'])
 
 onMounted(async () => {
   await accountStore.fetchCurrentUser()

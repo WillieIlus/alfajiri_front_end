@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { BASE_URL } from './base'
 import { useAccountStore } from './accounts'
+import { fetchWithErrorHandling } from '~/utils/api'
 
 export const useJobStore = defineStore('job', {
   state: () => ({
@@ -36,15 +37,15 @@ export const useJobStore = defineStore('job', {
       this.loading = true;
       this.error = null;
       try {
-        await action();
+        return await action();
       } catch (error) {
         this.error = error instanceof Error ? error.message : String(error);
         console.error('An error occurred:', this.error);
+        throw error; 
       } finally {
         this.loading = false;
       }
     },
-
 
     async fetchJobs(params = {}) {
       await this.handleError(async () => {
@@ -131,9 +132,12 @@ export const useJobStore = defineStore('job', {
         if (data.resume) {
           formData.append('resume', data.resume);
         }
-        // We don't need to append jobId here as it's part of the URL
-    
-        const response = await fetch(`${BASE_URL}/jobs/apply/${jobId}/`, {
+
+        if (!jobId) {
+          throw new Error('Job ID is missing');
+        }
+
+        const response = await fetchWithErrorHandling(`/jobs/apply/${jobId}/`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -184,15 +188,15 @@ export const useJobStore = defineStore('job', {
           throw new Error(`Failed to ${isCurrentlyBookmarked ? 'remove' : 'add'} bookmark`);
         }
         
-        const updatedJob = await response.json();
+        // const updatedJob = await response.json();
         
         // Update jobs list
-        this.jobs = this.jobs.map(job => job.id === jobId ? updatedJob : job);
+        // this.jobs = this.jobs.map(job => job.id === jobId ? updatedJob : job);
         
         // Update current job if it's the one being bookmarked/unbookmarked
-        if (this.job && this.job.id === jobId) {
-          this.job = updatedJob;
-        }
+        // if (this.job && this.job.id === jobId) {
+        //   this.job = updatedJob;
+        // }
         
         this.saveBookmarks();
       } catch (error) {

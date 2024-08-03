@@ -6,6 +6,7 @@
   </div>
   <UNotifications />
   <UModals />
+  <ScrollToTop />
 </template>
 
 <script setup>

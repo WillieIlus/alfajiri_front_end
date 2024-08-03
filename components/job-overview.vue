@@ -83,14 +83,14 @@
           </div>
         </div>
         <UButton class="mt-6" label="apply for job" block icon="i-heroicons-clipboard-document-list" size="sm" color="primary"
-        :ui="{ rounded: 'rounded-full' }" variant="solid" @click="showModal = true"
+         variant="solid" @click="showModal = true"
         :disabled="loading" />
     </UCard>
 
   <UModal v-model="showModal">
       <UCard>
         <template #header>
-          <h3 class="text-lg font-semibold">Apply for {{ job.title }}</h3>
+          <h3 class="text-lg font-semibold">Apply for {{ job?.title || 'Job' }}</h3>
         </template>
         <JobApplicationForm 
           :job-id="job.id" 

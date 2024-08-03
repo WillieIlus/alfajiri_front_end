@@ -9,7 +9,7 @@
     :disabled="!isLoggedIn"
   >
     <UIcon 
-      :name="isBookmarked ? 'i-heroicons-bookmark-20-solid' : 'i-heroicons-bookmark-20-solid'"
+      :name="isBookmarked ? 'i-heroicons-heart-20-solid' : 'i-heroicons-heart'"
       class="w-5 h-5"
     />
   </button>

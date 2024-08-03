@@ -71,6 +71,26 @@ export const useAccountStore = defineStore('account', {
       }
     },
 
+    async updateUser(userData) {
+      this.loading = true
+      try {
+        const response = await fetch('/api/user/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
+        })
+        if (!response.ok) throw new Error('Failed to update user profile')
+        this.user = await response.json()
+      } catch (error) {
+        this.error = error.message
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+
     async fetchJobs() {
       const jobStore = useJobStore();
       await jobStore.fetchJobs();

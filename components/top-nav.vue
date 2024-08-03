@@ -18,7 +18,7 @@
 
           <div class="flex flex-col sm:flex-row items-center gap-2">
             <div v-if="isLoggedIn" class="flex justify-center items-center gap-4">
-              <span class="px-4">Hi <ULink to="/accounts/dashboard" active-class="text-primary"
+              <span class="px-4">Hi <ULink to="/accounts/profile" active-class="text-primary"
                   inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
                   {{ user?.first_name || 'user' }}</ULink></span>
               <span>
