@@ -46,7 +46,7 @@
                     </span>
                     <span class="flex items-center">
                       <UIcon name="i-heroicons-users-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
-                       {{ job?.apply_count || '' }} applications
+                       {{ job?.apply_count || '0' }} applications
                     </span>
                   </div>
 
