@@ -38,15 +38,15 @@
                     </span>
                     <span class="flex items-center">
                       <UIcon name="i-heroicons-eye-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
-                      Views: {{ job?.view_count || '1' }}
+                       {{ job?.view_count || '1' }} Views
                     </span>
                     <span class="flex items-center">
                       <UIcon name="i-heroicons-heart-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
-                      Bookmarks: {{ job?.bookmarks || '0' }}
+                       {{ job?.bookmarks || '0' }} Bookmarks
                     </span>
-                    <span v-if="job.applicants_count" class="flex items-center">
+                    <span class="flex items-center">
                       <UIcon name="i-heroicons-users-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
-                      applicants: {{ job?.applicants || '' }}
+                       {{ job?.apply_count || '' }} applications
                     </span>
                   </div>
 
