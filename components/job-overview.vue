@@ -1,116 +1,114 @@
- <template>
-  <div v-if="loading">
+<template>
+  <div v-if="loading" class="p-4">
     Loading ...
   </div>
-  <div v-else-if="error">
+  <div v-else-if="error" class="p-4 text-red-600">
     Error: {{ error }}
   </div>
-  <div v-else-if="job" class="space-y-6">
-    <h3 class="font-semibold text-xl">
+  <div v-else-if="job" class="space-y-6 max-w-3xl mx-auto p-4">
+    <h3 class="font-bold text-2xl mb-6">
       Job Overview
     </h3>
     <UCard class="mb-6">
       <div class="p-4 flex items-start gap-4">
-        <UIcon name="i-heroicons-calendar" size="xl" class="py-4 bg-purple-500" variant="soft" />
+        <UIcon name="i-heroicons-calendar" class="text-3xl text-purple-500" />
         <div>
-          <h5 class="font-semibold text-xl">
+          <h5 class="font-semibold text-lg">
             Date Posted:
           </h5>
-          <p class="font-light text-sm">
+          <p class="text-gray-600">
             {{ job.timesince || "Not Specified" }}
           </p>
         </div>
       </div>
 
       <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-clock" size="xl" class="py-4 bg-purple-500" variant="soft" />
-          <div>
-            <h5 class="font-semibold text-xl">
-              Days Left:
-            </h5>
-            <p class="font-light text-sm">
-              {{ job?.days_left || "Not Specified" }}
-            </p>
-          </div>
+        <UIcon name="i-heroicons-clock" class="text-3xl text-purple-500" />
+        <div>
+          <h5 class="font-semibold text-lg">
+            Days Left:
+          </h5>
+          <p class="text-gray-600">
+            {{ job?.days_left || "Not Specified" }}
+          </p>
         </div>
+      </div>
 
-        <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-currency-dollar" size="xl" class="py-4 bg-purple-500" variant="soft" />
-          <div>
-            <h5 class="font-semibold text-xl">
-              Salary:
-            </h5>
-            <p class="font-light text-sm">
-              {{ job?.min_salary || "Not Specified" }} -
-              {{ job?.max_salary || "Not Specified" }}
-            </p>
-          </div>
+      <div class="p-4 flex items-start gap-4">
+        <UIcon name="i-heroicons-currency-dollar" class="text-3xl text-purple-500" />
+        <div>
+          <h5 class="font-semibold text-lg">
+            Salary:
+          </h5>
+          <p class="text-gray-600">
+            {{ job?.min_salary || "Not Specified" }} -
+            {{ job?.max_salary || "Not Specified" }}
+          </p>
         </div>
+      </div>
 
-        <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-tag" size="xl" class="py-4 bg-purple-500" variant="soft" />
-          <div>
-            <h5 class="font-semibold text-xl">
-              Category:
-            </h5>
-            <p class="font-light text-sm">
-              {{ job?.get_category || "Not Specified" }}
-            </p>
-          </div>
+      <div class="p-4 flex items-start gap-4">
+        <UIcon name="i-heroicons-tag" class="text-3xl text-purple-500" />
+        <div>
+          <h5 class="font-semibold text-lg">
+            Category:
+          </h5>
+          <p class="text-gray-600">
+            {{ job?.get_category || "Not Specified" }}
+          </p>
         </div>
+      </div>
 
-        <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-building-office-2" size="xl" class="py-4 bg-purple-500" variant="soft" />
-          <div>
-            <h5 class="font-semibold text-xl">
-              Company:
-            </h5>
-            <p class="font-light text-sm">
-              {{ job.get_company?.name || "Not Specified" }}
-            </p>
-          </div>
+      <div class="p-4 flex items-start gap-4">
+        <UIcon name="i-heroicons-building-office-2" class="text-3xl text-purple-500" />
+        <div>
+          <h5 class="font-semibold text-lg">
+            Company:
+          </h5>
+          <p class="text-gray-600">
+            {{ job.get_company?.name || "Not Specified" }}
+          </p>
         </div>
+      </div>
 
-        <div class="p-4 flex items-start gap-4">
-          <UIcon name="i-heroicons-map-pin" size="xl" class="py-4 bg-purple-500" variant="soft" />
-          <div>
-            <h5 class="font-semibold text-xl">
-              Location:
-            </h5>
-            <p class="font-light text-sm">
-              {{ job?.address || "Not Specified" }}, {{ job?.get_location || "Not Specified" }}
-            </p>
-          </div>
+      <div class="p-4 flex items-start gap-4">
+        <UIcon name="i-heroicons-map-pin" class="text-3xl text-purple-500" />
+        <div>
+          <h5 class="font-semibold text-lg">
+            Location:
+          </h5>
+          <p class="text-gray-600">
+            {{ job?.address || "Not Specified" }}, {{ job?.get_location || "Not Specified" }}
+          </p>
         </div>
-        <UButton class="mt-6" label="apply for job" block icon="i-heroicons-clipboard-document-list" size="sm" color="primary"
-         variant="solid" @click="showModal = true"
-        :disabled="loading" />
+      </div>
+      <UButton class="mt-6 w-full" label="Apply for Job" icon="i-heroicons-clipboard-document-list" 
+        color="primary" :loading="loading" @click="showModal = true" />
+    </UCard>
+    <UCard>
+      <div class="flex items-center gap-4">
+        <p class="font-medium">Share this post:</p>
+        <SocialShare v-for="network in ['facebook', 'twitter', 'whatsapp', 'linkedin', 'email']" :key="network" :network="network"
+          :styled="true" :label="false" class="p-2 rounded-full text-white hover:opacity-80 transition-opacity" />
+      </div>
     </UCard>
 
-  <UModal v-model="showModal">
+    <UModal v-model="showModal">
       <UCard>
         <template #header>
           <h3 class="text-lg font-semibold">Apply for {{ job?.title || 'Job' }}</h3>
         </template>
-        <JobApplicationForm 
-          :job-id="job.id" 
-          @application-submitted="onApplicationSubmitted"
-        />
+        <JobApplicationForm :job-id="job.id" @application-submitted="onApplicationSubmitted" />
       </UCard>
     </UModal>
   </div>
-  <div v-else>
+  <div v-else class="p-4 text-gray-600">
     No job data available.
   </div>
 </template>
 
 <script setup>
-import { ref} from 'vue'
-import backgroundImage from '~/assets/images/background.jpg'
-
-const jobStyle = {
-  backgroundImage: `url(${backgroundImage})`
-}
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   job: {
@@ -129,7 +127,6 @@ const props = defineProps({
 
 const showModal = ref(false)
 
-
 const onApplicationSubmitted = () => {
   showModal.value = false
   emit('refresh-job-data')
@@ -140,5 +137,4 @@ const emit = defineEmits(['refresh-job-data'])
 watch(() => props.job, (newJob) => {
   console.log('Job prop updated in JobOverview:', newJob)
 })
-
 </script>

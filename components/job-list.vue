@@ -61,7 +61,7 @@
                       <UBadge color="primary" variant="soft"> vacancies: {{ job?.vacancies || '1' }}</UBadge>
                     </span>
                   </div>
-                  <div class="text-torea-bay-500 dark:text-torea-bay-300  max-w-none">
+                  <div class="text-torea-bay-500 dark:text-torea-bay-300 max-w-none">
                     <p v-html="job?.truncated_description || '&nbsp;'"></p>
                   </div>
                 </div>
@@ -82,6 +82,7 @@
                 </div>
               </div>
             </div>
+            <div :class="getJobBgClass(job)" class="min-w-full h-1 mt-3 -mb-6 -mx-6 rounded-b-lg"></div>
           </UCard>
         </li>
       </ul>
@@ -92,10 +93,8 @@
             <h3 class="text-lg font-semibold">Apply for {{ selectedJob.title }}</h3>
           </template>
           <JobApplicationForm :job-id="selectedJob.id" @application-submitted="onApplicationSubmitted" />
-          <!-- <JobApplicationForm :job="selectedJob" @application-submitted="onApplicationSubmitted" /> -->
         </UCard>
       </UModal>
-
 
       <div v-if="hasMoreItems" class="mt-8 text-center">
         <UButton @click="$emit('incrementItemsPerPage')" color="primary" variant="outline">
@@ -107,6 +106,7 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import noLogo from '~/assets/images/no-image-01.jpg'
 import { useAccountStore } from '~/store/accounts'
@@ -120,10 +120,6 @@ const refreshing = ref(false)
 const router = useRouter()
 
 const props = defineProps({
-  // jobId: {
-  //   type: [Number, String],
-  //   required: true
-  // },
   jobs: {
     type: Array,
     default: () => []
@@ -163,4 +159,16 @@ const emit = defineEmits(['incrementItemsPerPage', 'editJob', 'refreshData', 're
 onMounted(async () => {
   await accountStore.fetchCurrentUser()
 })
+
+const getJobBgClass = (job) => {
+  if (job.days_left === null) {
+    return 'bg-gray-500';
+  } else if (job.days_left > 10) {
+    return 'bg-blue-500';
+  } else if (job.days_left < 6) {
+    return 'bg-red-500';
+  } else {
+    return 'bg-green-500';
+  }
+}
 </script>
