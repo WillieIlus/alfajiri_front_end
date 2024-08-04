@@ -107,13 +107,13 @@
 
             <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="min_salary" label="Min Salary">
-                <UInput v-model="state.min_salary" placeholder="Minimum salary" />
+                <UInput v-model="state.min_salary" type="number" placeholder="Minimum salary" />
               </UFormGroup>
             </div>
 
             <div class="w-full md:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
               <UFormGroup class="flex-auto" size="xl" name="max_salary" label="Max Salary">
-                <UInput v-model="state.max_salary" placeholder="Maximum salary" />
+                <UInput v-model="state.max_salary" type="number" placeholder="Maximum salary" />
               </UFormGroup>
             </div>
           </div>
