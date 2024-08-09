@@ -11,6 +11,9 @@
     </div>
 
     <div v-else>
+      <h3 class="font-bold text-2xl mb-6">
+        Other Jobs you May Like
+      </h3>
       <ul class="space-y-6">
         <li v-for="job in jobs" :key="job.slug">
           <UCard class="shadow-md hover:rounded-lg transition transform hover:scale-105">

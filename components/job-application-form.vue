@@ -5,6 +5,7 @@
     </UFormGroup>
     <UFormGroup name="resume" label="Resume">
       <UInput type="file" @change="onResumeChange" accept=".pdf,.doc,.docx" />
+      <ResumePreview :fileUrl="resumeUrl" />
     </UFormGroup>
     <UButton type="submit" :disabled="submitting">Submit Application</UButton>
     <p v-if="successMessage">{{ successMessage }}</p>
@@ -26,12 +27,11 @@ const emit = defineEmits(['application-submitted'])
 const successMessage = ref('')
 const errorMessage = ref('')
 const submitting = ref(false)
+const resumeUrl = ref<string | null>(null)
 
 const props = defineProps<{
   jobId: number
 }>()
-
-const resume = ref<File | null>(null)
 
 const schema = z.object({
   cover_letter: z.string().min(10, 'Cover letter must be at least 10 characters'),
@@ -47,7 +47,9 @@ const state = ref({
 const onResumeChange = (e: Event) => {
   const target = e.target as HTMLInputElement
   if (target && target.files && target.files.length > 0) {
-    resume.value = target.files[0]
+    const file = target.files[0]
+    resumeUrl.value = URL.createObjectURL(file)
+    state.value.resume = file
   }
 }
 
@@ -57,19 +59,16 @@ const onSubmit = async ({ data }: FormSubmitEvent<Schema>) => {
   successMessage.value = ''
 
   try {
-    const formData = {
-      cover_letter: data.cover_letter,
-      resume: resume.value
-    }
-
-    await jobStore.applyForJob(props.jobId, formData)
-
+    await jobStore.applyForJob(props.jobId, data)
     successMessage.value = 'Application submitted successfully'
     emit('application-submitted')
 
     // Reset form
     state.value = { cover_letter: '' }
-    resume.value = null
+    resumeUrl.value = null
+    if (data.resume) {
+      URL.revokeObjectURL(data.resume)
+    }
 
     setTimeout(() => {
       successMessage.value = ''
@@ -81,5 +80,4 @@ const onSubmit = async ({ data }: FormSubmitEvent<Schema>) => {
     submitting.value = false
   }
 }
-
 </script>

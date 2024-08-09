@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
 import { BASE_URL } from './base'
+import { defineStore } from 'pinia'
 import { useAccountStore } from './accounts'
 
 export const useCompanyStore = defineStore('company', {
@@ -76,28 +76,35 @@ export const useCompanyStore = defineStore('company', {
       }
     },
 
-    async createCompany(data) {
+    async createCompany(data: FormData) {
       this.loading = true
       try {
         const accountStore = useAccountStore()
         const token = accountStore.token
-        const headers = {
-          'Authorization': 'Bearer ' + token,
+        
+        console.log('Sending data to server:')
+        for (let [key, value] of data.entries()) {
+          console.log(key, value)
         }
+        
         const response = await fetch(`${BASE_URL}/companies/`, {
           method: 'POST',
-          headers: headers,
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
           body: data,
         })
+
         if (!response.ok) {
-          const error = await response.json()
-          throw new Error('Server responded with ' + response.status)
+          const errorData = await response.json()
+          throw new Error(`Server responded with ${response.status}: ${JSON.stringify(errorData)}`)
         }
-        const responseData = await response.json()
-        this.companies.push(responseData)
-        await this.fetchCompanies()
-        return responseData
+
+        const newCompany = await response.json()
+        this.companies.push(newCompany)
+        return newCompany
       } catch (error) {
+        console.error('Error in createCompany:', error)
         this.error = error
         throw error
       } finally {
@@ -163,4 +170,4 @@ export const useCompanyStore = defineStore('company', {
       });
     },
   },
-}) 
+})

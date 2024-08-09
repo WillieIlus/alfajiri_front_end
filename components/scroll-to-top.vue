@@ -13,7 +13,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 const isVisible = ref(false);
 
 const checkScroll = () => {
-  console.log('Scroll position:', window.scrollY);
+  // console.log('Scroll position:', window.scrollY);
   if (window.scrollY > 300) {
     isVisible.value = true;
   } else {

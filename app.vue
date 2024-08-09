@@ -20,7 +20,7 @@ const { user } = storeToRefs(accountStore);
 
 onMounted(async () => {
   await accountStore.fetchCurrentUser();
-  await jobStore.initializeBookmarks();
+  // await jobStore.initializeBookmarks();
 });
 
 </script>

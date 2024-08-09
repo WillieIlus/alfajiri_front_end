@@ -9,11 +9,14 @@
         <JobOverview :error="error" :loading="loading" :job="job" />
       </div>
     </div>
-    <JobList 
+    <div class="mt-24">
+
+      <JobList
       :jobs="relatedJobs || []" 
       :loading="loading" 
       :error="error"
       :hasMoreItems="false"  />
+  </div>
   </CustomContainer>
 </template>
 

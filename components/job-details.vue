@@ -9,7 +9,8 @@
     <h3 class="font-semibold text-xl">
       {{ job?.title || "Not Specified" }}
     </h3>
-    <UCard class="mb-6 h-64 p-0 overflow-hidden rounded-lg shadow-lg bg-cover bg-center bg-no-repeat" :style="jobStyle">
+    <UCard class="mb-6 p-0 overflow-hidden rounded-lg shadow-lg" :style="jobStyle">
+      <img :src="job?.image || defaultBackgroundImage" alt="Job Background" class="w-full h-auto object-cover" />
     </UCard>
 
     <UCard class="d bg-white dark:bg-gray-800 rounded-lg shadow-lg">
@@ -23,16 +24,13 @@
 </template>
 
 <script setup>
-import backgroundImage from '~/assets/images/background.jpg'
-
-const jobStyle = {
-  backgroundImage: `url(${backgroundImage})`
-}
+import { computed } from 'vue'
+import defaultBackgroundImage from '~/assets/images/background.jpg'
 
 const props = defineProps({
   job: {
     type: Object,
-    default: () => []
+    default: () => ({})
   },
   error: {
     type: String,
@@ -41,6 +39,14 @@ const props = defineProps({
   loading: {
     type: Boolean,
     default: false
+  }
+})
+
+const jobStyle = computed(() => {
+  const backgroundImage = props.job?.image || defaultBackgroundImage
+  return {
+    backgroundImage: `url(${backgroundImage})`,
+    height: 'auto' // Ensures that the height adjusts to the image
   }
 })
 </script>
