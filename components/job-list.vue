@@ -12,7 +12,7 @@
 
     <div v-else>
       <h3 class="font-bold text-2xl mb-6">
-        Other Jobs you May Like
+        Other {{ totalJobs }} Job{{ totalJobs !== 1 ? 's' : '' }} you May Like
       </h3>
       <ul class="space-y-6">
         <li v-for="job in jobs" :key="job.slug">
@@ -41,15 +41,15 @@
                     </span>
                     <span class="flex items-center">
                       <UIcon name="i-heroicons-eye-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
-                       {{ job?.view_count || '1' }} Views
+                      {{ job?.view_count || '1' }} View{{ job?.view_count !== 1 ? 's' : '' }}
                     </span>
                     <span class="flex items-center">
                       <UIcon name="i-heroicons-heart-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
-                       {{ job?.bookmarks || '0' }} Bookmarks
+                      {{ job?.bookmarks || '0' }} Bookmark{{ job?.bookmarks !== 1 ? 's' : '' }}
                     </span>
                     <span class="flex items-center">
                       <UIcon name="i-heroicons-users-20-solid" class="w-5 h-5 mr-2 text-torea-bay-400" />
-                       {{ job?.apply_count || '0' }} applications
+                      {{ job?.apply_count || '0' }} application{{ job?.apply_count !== 1 ? 's' : '' }}
                     </span>
                   </div>
 
@@ -69,17 +69,29 @@
                   </div>
                 </div>
               </div>
-              <div class="mt-6 flex justify-between items-center">
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ job?.timesince || '' }} ago</p>
-                <div class="flex items-center space-x-4">
-                  <div
-                    class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200">
-                    <BookmarkButton :job-post="job" />
-                  </div>
-                  <UButton label="apply for job" icon="i-heroicons-clipboard-document-list" size="sm" color="primary"
-                    variant="solid" @click="openModal(job)" :disabled="loading" />
+              <div class="mt-6 flex flex-wrap justify-between items-center">
+                <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                  <span class="flex items-center">
+                    <UIcon name="i-heroicons-clock" class="w-4 h-4 mr-1" />
+                    {{ job?.timesince || '' }} ago
+                  </span>
+                  <span class="text-gray-300 dark:text-gray-600">|</span>
+                  <span class="flex items-center">
+                    <UIcon name="i-heroicons-calendar" class="w-4 h-4 mr-1" />
+                    {{ job?.days_left || '' }} days left
+                  </span>
+                </div>
+                <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+                  <UTooltip text="Bookmark">
+                    <div
+                      class="relative w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200">
+                      <BookmarkButton :job-post="job" />
+                    </div>
+                  </UTooltip>
+                  <UButton label="Apply" icon="i-heroicons-paper-airplane" size="sm" color="primary" variant="solid"
+                    @click="openModal(job)" :disabled="loading" />
                   <UButton v-if="job.get_user === user.email" @click="$emit('editJob', job.slug)" color="yellow"
-                    size="sm">
+                    size="sm" icon="i-heroicons-pencil-square">
                     Edit
                   </UButton>
                 </div>
@@ -100,9 +112,8 @@
       </UModal>
 
       <div v-if="hasMoreItems" class="mt-8 text-center">
-        <UButton @click="$emit('incrementItemsPerPage')" color="primary" variant="outline">
-          Load More
-        </UButton>
+        <UButton v-if="hasMoreItems" @click="$emit('incrementItemsPerPage')">Load More</UButton>
+
       </div>
     </div>
   </div>
@@ -122,28 +133,6 @@ const { user } = storeToRefs(accountStore)
 const refreshing = ref(false)
 const router = useRouter()
 
-const props = defineProps({
-  jobs: {
-    type: Array,
-    default: () => []
-  },
-  loading: {
-    type: Boolean,
-    default: false
-  },
-  error: {
-    type: String,
-    default: ''
-  },
-  hasMoreItems: {
-    type: Boolean,
-    default: true
-  },
-  refreshing: {
-    type: Boolean,
-    default: false
-  }
-})
 
 const showModal = ref(false)
 const selectedJob = ref(null)
@@ -157,7 +146,8 @@ const onApplicationSubmitted = () => {
   emit('refresh-job-data')
 }
 
-const emit = defineEmits(['incrementItemsPerPage', 'editJob', 'refreshData', 'refresh-job-data'])
+defineProps(['jobs', 'loading', 'error', 'hasMoreItems', 'refreshing', 'totalJobs'])
+defineEmits(['incrementItemsPerPage', 'editJob', 'refreshData'])
 
 onMounted(async () => {
   await accountStore.fetchCurrentUser()

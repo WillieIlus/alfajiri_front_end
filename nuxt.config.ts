@@ -61,7 +61,7 @@ export default defineNuxtConfig({
     "nuxt-tiptap-editor",
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
-    'nuxt-simple-sitemap',
+    // 'nuxt-simple-sitemap',
     'nuxt-simple-robots',
     "@stefanobartoletti/nuxt-social-share",
     "@nuxtjs/sitemap",

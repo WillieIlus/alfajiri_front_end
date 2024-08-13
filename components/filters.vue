@@ -78,6 +78,8 @@ const { categories } = storeToRefs(categoryStore)
 const { locations } = storeToRefs(locationStore)
 const { companies } = storeToRefs(companyStore)
 
+const emit = defineEmits(['update:title', 'update:location', 'update:category', 'update:company', 'update:minSalary', 'update:maxSalary', 'update:jobType', 'update:vacancies'])
+
 const title = ref('')
 const location = ref('')
 const category = ref('')
@@ -86,6 +88,7 @@ const minSalary = ref(null)
 const maxSalary = ref(null)
 const jobType = ref('')
 const vacancies = ref(null)
+
 
 const categoryOptions = computed(() => [
   { label: 'All Categories', value: '' },
@@ -125,10 +128,19 @@ const performSearch = () => {
   })
 }
 
-watch(
-  [title, location, category, company, minSalary, maxSalary, jobType, vacancies],
-  performSearch
-)
+const emitChanges = () => {
+  emit('update:title', title.value)
+  emit('update:location', location.value)
+  emit('update:category', category.value)
+  emit('update:company', company.value)
+  emit('update:minSalary', minSalary.value)
+  emit('update:maxSalary', maxSalary.value)
+  emit('update:jobType', jobType.value)
+  emit('update:vacancies', vacancies.value)
+}
+
+watch([title, location, category, company, minSalary, maxSalary, jobType, vacancies], emitChanges)
+
 
 onMounted(() => {
   categoryStore.fetchCategories()
