@@ -25,6 +25,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useSeoMeta } from '~/composables/useSeoMeta'
 import defaultBackgroundImage from '~/assets/images/background.jpg'
 
 const props = defineProps({
@@ -49,4 +50,13 @@ const jobStyle = computed(() => {
     height: 'auto' // Ensures that the height adjusts to the image
   }
 })
+
+useSeoMeta({
+  title: `${props.job?.title || 'Job'} - Alfajirijobs`,
+  description: props.job?.description,
+  image: props.job?.image || defaultBackgroundImage,
+  url: `https://alfajirijobs.com/${props.job?.id}`
+})
+
+
 </script>

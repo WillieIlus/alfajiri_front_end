@@ -57,7 +57,6 @@ watch(job, (newJob) => {
 })
 
 
-// Compute meta description
 const metaDescription = computed(() => {
   if (job.value) {
     return `${job.value.title} - ${job.value.company} - ${job.value.location}. ${job.value.description.substring(0, 150)}...`
@@ -65,30 +64,10 @@ const metaDescription = computed(() => {
   return 'Find your next job opportunity with Alfajirijobs.'
 })
 
-// Compute canonical URL
 const canonicalUrl = computed(() => {
   return `https://alfajirijobs.com/jobs/${route.params.slug}`
 })
 
-// Use Nuxt 3's useHead composable for dynamic meta tags
-useHead(() => ({
-  title: job.value ? `${job.value.title} - Alfajirijobs` : 'Job Details - Alfajirijobs',
-  meta: [
-    { name: 'description', content: metaDescription.value },
-    { property: 'og:title', content: job.value ? `${job.value.title} - Alfajirijobs` : 'Job Details - Alfajirijobs' },
-    { property: 'og:description', content: metaDescription.value },
-    { property: 'og:url', content: canonicalUrl.value },
-    { property: 'og:type', content: 'article' },
-    { property: 'og:image', content: job.value?.company_logo || 'https://alfajirijobs.com/default-og-image.jpg' },
-    { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: job.value ? `${job.value.title} - Alfajirijobs` : 'Job Details - Alfajirijobs' },
-    { name: 'twitter:description', content: metaDescription.value },
-    { name: 'twitter:image', content: job.value?.company_logo || 'https://alfajirijobs.com/default-twitter-image.jpg' },
-  ],
-  link: [
-    { rel: 'canonical', href: canonicalUrl.value }
-  ]
-}))
 
 
 </script>

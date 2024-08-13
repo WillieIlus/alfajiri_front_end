@@ -28,6 +28,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import { useSeoMeta } from '~/composables/useSeoMeta'
 import { useJobStore } from '~/store/jobs'
 import { useCategoryStore } from '~/store/categories'
 import { useLocationStore } from '~/store/locations'
@@ -149,28 +150,15 @@ onMounted(async () => {
   await locationStore.fetchLocations()
 })
 
-// Compute meta description
 const metaDescription = computed(() => {
   return `Find the latest job opportunities on Alfajirijobs. Browse through more than 93,178+ job listings in various categories and locations.`
 })
 
-// Use Nuxt 3's useHead composable for meta tags
-useHead({
+useSeoMeta({
   title: 'Latest Job Listings - Alfajirijobs',
-  meta: [
-    { name: 'description', content: metaDescription.value },
-    { property: 'og:title', content: 'Latest Job Listings - Alfajirijobs' },
-    { property: 'og:description', content: metaDescription.value },
-    { property: 'og:url', content: 'https://alfajirijobs.com' },
-    { property: 'og:type', content: 'website' },
-    { property: 'og:image', content: 'https://alfajirijobs.com/og-image.jpg' },
-    { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'Latest Job Listings - Alfajirijobs' },
-    { name: 'twitter:description', content: metaDescription.value },
-    { name: 'twitter:image', content: 'https://alfajirijobs.com/twitter-image.jpg' },
-  ],
-  link: [
-    { rel: 'canonical', href: 'https://alfajirijobs.com' }
-  ]
+  description: metaDescription.value,
+  image: 'https://alfajirijobs.com/og-image.jpg',
+  url: 'https://alfajirijobs.com'
 })
+
 </script>

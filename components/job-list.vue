@@ -78,7 +78,7 @@
                   <span class="text-gray-300 dark:text-gray-600">|</span>
                   <span class="flex items-center">
                     <UIcon name="i-heroicons-calendar" class="w-4 h-4 mr-1" />
-                    {{ job?.days_left || '' }} days left
+                    {{ job?.days_left > 0 ? `${job?.days_left} days left` : 'Closed' }}
                   </span>
                 </div>
                 <div class="flex items-center space-x-3 mt-3 sm:mt-0">
@@ -88,8 +88,10 @@
                       <BookmarkButton :job-post="job" />
                     </div>
                   </UTooltip>
-                  <UButton label="Apply" icon="i-heroicons-paper-airplane" size="sm" color="primary" variant="solid"
-                    @click="openModal(job)" :disabled="loading" />
+                  <UButton :label="job.days_left > 0 ? 'Apply' : 'Closed'" icon="i-heroicons-paper-airplane" size="sm"
+                    :color="job.days_left > 0 ? 'primary' : 'red'" :variant="job.days_left > 0 ? 'solid' : 'soft'"
+                    @click="openModal(job)" :disabled="loading || job.days_left <= 0">
+                  </UButton>
                   <UButton v-if="job.get_user === user.email" @click="$emit('editJob', job.slug)" color="yellow"
                     size="sm" icon="i-heroicons-pencil-square">
                     Edit
@@ -138,9 +140,12 @@ const showModal = ref(false)
 const selectedJob = ref(null)
 
 const openModal = (job) => {
-  selectedJob.value = job
-  showModal.value = true
+  if (job.days_left > 0) {
+    selectedJob.value = job
+    showModal.value = true
+  }
 }
+
 const onApplicationSubmitted = () => {
   showModal.value = false
   emit('refresh-job-data')
@@ -156,6 +161,8 @@ onMounted(async () => {
 const getJobBgClass = (job) => {
   if (job.days_left === null) {
     return 'bg-gray-500';
+  } else if (job.days_left <= 0) {
+    return 'bg-red-700'; // Darker red for closed jobs
   } else if (job.days_left > 10) {
     return 'bg-blue-500';
   } else if (job.days_left < 6) {
@@ -164,4 +171,5 @@ const getJobBgClass = (job) => {
     return 'bg-green-500';
   }
 }
+
 </script>
