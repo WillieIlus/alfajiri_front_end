@@ -82,14 +82,17 @@
           </p>
         </div>
       </div>
-      <UButton class="mt-6 w-full" label="Apply for Job" icon="i-heroicons-clipboard-document-list" 
-        color="primary" :loading="loading" @click="showModal = true" />
+      <UButton :label="props.job.days_left > 0 ? 'Apply' : 'Closed'" icon="i-heroicons-paper-airplane" size="sm"
+        :color="props.job.days_left > 0 ? 'primary' : 'red'" :variant="props.job.days_left > 0 ? 'solid' : 'soft'"
+        @click="handleApply" :disabled="loading || props.job.days_left <= 0">
+      </UButton>
     </UCard>
     <UCard>
       <div class="flex items-center gap-4">
         <p class="font-medium">Share this post:</p>
-        <SocialShare v-for="network in ['facebook', 'twitter', 'whatsapp', 'linkedin', 'email']" :key="network" :network="network"
-          :styled="true" :label="false" class="p-2 rounded-full text-white hover:opacity-80 transition-opacity" />
+        <SocialShare v-for="network in ['facebook', 'twitter', 'whatsapp', 'linkedin', 'email']" :key="network"
+          :network="network" :styled="true" :label="false"
+          class="p-2 rounded-full text-white hover:opacity-80 transition-opacity" />
       </div>
     </UCard>
 
@@ -108,7 +111,9 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+
+const router = useRouter()
 
 const props = defineProps({
   job: {
@@ -125,7 +130,34 @@ const props = defineProps({
   }
 })
 
+
+const handleApply = () => {
+  if (props.job.application_contact && props.job.application_contact.startsWith('http')) {
+    try {
+      const newWindow = window.open(props.job.application_contact, '_blank', 'noopener,noreferrer');
+      if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        throw new Error('Popup blocked');
+      }
+    } catch (error) {
+      console.error('Failed to open application URL:', error);
+      // Show a user-friendly message
+    }
+  } else if (props.job.application_contact === 'email') {
+    openModal();
+  } else {
+    console.error('Invalid application contact method');
+    // Show a user-friendly error message
+  }
+}
+
 const showModal = ref(false)
+
+const openModal = (job) => {
+  if (job.days_left > 0) {
+    selectedJob.value = job
+    showModal.value = true
+  }
+}
 
 const onApplicationSubmitted = () => {
   showModal.value = false

@@ -95,27 +95,39 @@ export const useJobStore = defineStore('job', {
     },
 
     async applyForJob(jobId, data) {
-      await this.handleError(async () => {
-        const accountStore = useAccountStore()
-        const token = accountStore.token
-        const formData = new FormData()
-        formData.append('cover_letter', data.cover_letter)
-        if (data.resume) {
-          formData.append('resume', data.resume)
+      const accountStore = useAccountStore()
+      const token = accountStore.token
+      const formData = new FormData()
+
+      // Append all form fields to FormData
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          formData.append(key, value)
         }
-        const response = await fetchWithErrorHandling(`/jobs/apply/${jobId}/`, {
+      })
+
+      try {
+        const response = await fetch(`${BASE_URL}/jobs/apply/${jobId}/`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
+            // Don't set Content-Type, let the browser set it for FormData
           },
           body: formData,
         })
+
         if (!response.ok) {
           const errorData = await response.json()
-          throw new Error(errorData.error || 'Failed to apply for the job')
+          console.error('Application failed:', errorData)
+          throw new Error(errorData.error || `Server responded with ${response.status}: ${JSON.stringify(errorData)}`)
         }
+
         const newAppliedJob = await response.json()
-      })
+        return newAppliedJob
+      } catch (error) {
+        console.error('Error in applyForJob:', error)
+        throw error  // Re-throw the error so the component can handle it
+      }
     },
 
     async fetchJobs(params = {}) {
@@ -128,21 +140,19 @@ export const useJobStore = defineStore('job', {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         const data = await response.json()
-        
+
         console.log('Response data:', data)
-    
-        // Check if data is an array
+
         if (!Array.isArray(data)) {
           console.error('data is not an array:', data)
           throw new Error('Invalid response format: data is not an array')
         }
-    
+
         this.jobs = data
         this.totalJobs = data.length
-    
-        console.log('Processed jobs:', this.jobs)
-        console.log('Total jobs:', this.totalJobs)
-    
+        // console.log('Processed jobs:', this.jobs)
+        // console.log('Total jobs:', this.totalJobs)
+
       } catch (error) {
         console.error('Error fetching jobs:', error)
         this.error = 'Failed to fetch jobs. Please try again.'
@@ -150,7 +160,7 @@ export const useJobStore = defineStore('job', {
         this.loading = false
       }
     },
-    
+
     incrementItemsPerPage() {
       this.itemsPerPage += 10
     },

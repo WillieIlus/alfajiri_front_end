@@ -11,9 +11,9 @@
     </div>
 
     <div v-else>
-      <h3 class="font-bold text-2xl mb-6">
-        Other {{ totalJobs }} Job{{ totalJobs !== 1 ? 's' : '' }} you May Like
-      </h3>
+      <h4 class="text-xl mb-6 ">
+        {{ totalJobs }} Job{{ totalJobs !== 1 ? 's' : '' }} you May Like
+      </h4>
       <ul class="space-y-6">
         <li v-for="job in jobs" :key="job.slug">
           <UCard class="shadow-md hover:rounded-lg transition transform hover:scale-105">
@@ -90,7 +90,7 @@
                   </UTooltip>
                   <UButton :label="job.days_left > 0 ? 'Apply' : 'Closed'" icon="i-heroicons-paper-airplane" size="sm"
                     :color="job.days_left > 0 ? 'primary' : 'red'" :variant="job.days_left > 0 ? 'solid' : 'soft'"
-                    @click="openModal(job)" :disabled="loading || job.days_left <= 0">
+                    @click="handleApply(job)" :disabled="loading || job.days_left <= 0">
                   </UButton>
                   <UButton v-if="job.get_user === user.email" @click="$emit('editJob', job.slug)" color="yellow"
                     size="sm" icon="i-heroicons-pencil-square">
@@ -135,15 +135,25 @@ const { user } = storeToRefs(accountStore)
 const refreshing = ref(false)
 const router = useRouter()
 
-
 const showModal = ref(false)
 const selectedJob = ref(null)
 
-const openModal = (job) => {
-  if (job.days_left > 0) {
-    selectedJob.value = job
-    showModal.value = true
+const handleApply = (job) => {
+  if (job.days_left <= 0) {
+    console.error('This job is no longer accepting applications');
+    return;
   }
+
+  if (job.application_contact && job.application_contact.startsWith('http')) {
+    window.open(job.application_contact, '_blank', 'noopener,noreferrer');
+  } else {
+    openModal(job);
+  }
+}
+
+const openModal = (job) => {
+  selectedJob.value = job
+  showModal.value = true
 }
 
 const onApplicationSubmitted = () => {
@@ -162,14 +172,16 @@ const getJobBgClass = (job) => {
   if (job.days_left === null) {
     return 'bg-gray-500';
   } else if (job.days_left <= 0) {
-    return 'bg-red-700'; // Darker red for closed jobs
+    return 'bg-red-950';
   } else if (job.days_left > 10) {
     return 'bg-blue-500';
   } else if (job.days_left < 6) {
-    return 'bg-red-500';
+    return 'bg-orange-600';
   } else {
     return 'bg-green-500';
   }
 }
+
+
 
 </script>

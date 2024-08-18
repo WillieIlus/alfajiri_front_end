@@ -53,6 +53,12 @@ export default defineNuxtConfig({
     "@nuxtjs/sitemap",
     "@nuxtjs/robots"
   ],
+  tiptap: {
+    prefix: 'Tiptap',
+    lowlight: {
+      theme: 'github-dark',
+    },
+  },
   socialShare: {
     baseUrl: 'https://alfajirijobs.com'
   },
@@ -62,13 +68,13 @@ export default defineNuxtConfig({
       exclude: [
         '/admin/**'
       ]
-    }
-  },
-  '@nuxtjs/robots': {
-    rules: {
-      UserAgent: '*',
-      Allow: '/',
-      Sitemap: 'https://alfajirijobs.com/sitemap.xml'
-    }
+    },
+    '@nuxtjs/robots': {
+      rules: {
+        UserAgent: '*',
+        Allow: '/',
+        Sitemap: 'https://alfajirijobs.com/sitemap.xml'
+      }
+    },
   },
 })

@@ -1,119 +1,155 @@
 <template>
-  <UCard class="mb-6">
-    <h2 class="mb-4 font-bold text-2xl">{{ jobSlug ? 'Update Job Vacancy' : 'Add a new Job Vacancy' }}</h2>
-    <form class="space-y-4" @submit.prevent="onSubmit">
-      <UFormGroup name="title" label="Title">
-        <UInput v-model="form.title" @focus="checkAuth" />
-      </UFormGroup>
+  <div>
+    <UButton class="mb-4" icon="i-heroicons-plus" color="primary"
+      :ui="{ rounded: 'rounded-full' }" size="xl" @click="toggleForm" label="Add a new job" />
 
-      <div v-if="showDetails">
-        <div class="flex flex-wrap">
-          <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
-            <UFormGroup class="flex-auto" size="xl" name="company" label="Company">
-              <UInputMenu v-model="form.company" :options="companyOptions" />
+    <UCard v-if="showForm" class="mb-6">
+      <h2 class="mb-4 font-bold text-2xl">{{ jobSlug ? 'Update Job Vacancy' : 'Add a new Job Vacancy' }}</h2>
+
+      <form class="space-y-6" @submit.prevent="onSubmit">
+        <!-- Basic Information Section -->
+        <fieldset class="border p-4 rounded-lg">
+          <legend class="text-lg font-semibold px-2">Basic Information</legend>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <UFormGroup name="title" label="Job Title">
+              <UInput v-model="form.title" placeholder="Enter job title" @focus="checkAuth" />
             </UFormGroup>
-            <UButton class="mt-6 min-w-4 max-w-12 max-h-12 min-h-4" icon="i-heroicons-plus" size="sm" color="primary"
-              :ui="{ rounded: 'rounded-full' }" variant="solid" @click="openModal('company')" />
-          </div>
-
-          <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
-            <UFormGroup class="flex-auto" size="xl" name="category" label="Category">
-              <UInputMenu v-model="form.category" :options="categoryOptions" />
+            <UFormGroup class="flex-grow w-full" name="company" label="Company">
+              <div class="flex items-center">
+                <UInputMenu :ui="{ rounded: 'rounded-r-none' }" class="flex-grow" v-model="form.company"
+                  :options="companyOptions" />
+                <UButton class="-ml-px" icon="i-heroicons-plus" size="sm" color="primary"
+                  :ui="{ rounded: 'rounded-l-none' }" variant="solid" @click="openModal('company')" />
+              </div>
             </UFormGroup>
-            <UButton class="mt-6 min-w-4 max-w-12 max-h-12 min-h-4" icon="i-heroicons-plus" size="sm" color="primary"
-              :ui="{ rounded: 'rounded-full' }" variant="solid" @click="openModal('category')" />
-          </div>
 
-          <div class="w-full md:w-1/2 lg:w-1/3 p-2 flex flex-nowrap gap-4 items-center">
-            <UFormGroup class="flex-auto" size="xl" name="location" label="Location">
-              <UInputMenu v-model="form.location" :options="locationOptions" />
+            <UFormGroup name="category" label="Category">
+              <div class="flex items-center">
+                <UInputMenu :ui="{ rounded: 'rounded-r-none' }" class="flex-grow" v-model="form.category"
+                  :options="categoryOptions" />
+                <UButton class="-ml-px" icon="i-heroicons-plus" size="sm" color="primary"
+                  :ui="{ rounded: 'rounded-l-none' }" variant="solid" @click="openModal('category')" />
+              </div>
             </UFormGroup>
-            <UButton class="mt-6 min-w-4 max-w-12 max-h-12 min-h-4" icon="i-heroicons-plus" size="sm" color="primary"
-              :ui="{ rounded: 'rounded-full' }" variant="solid" @click="openModal('location')" />
+
+            <UFormGroup name="location" label="Location">
+              <div class="flex items-center">
+                <UInputMenu :ui="{ rounded: 'rounded-r-none' }" class="flex-grow" v-model="form.location"
+                  :options="locationOptions" />
+                <UButton class="-ml-px" icon="i-heroicons-plus" size="sm" color="primary"
+                  :ui="{ rounded: 'rounded-l-none' }" variant="solid" @click="openModal('location')" />
+              </div>
+            </UFormGroup>
           </div>
-        </div>
+        </fieldset>
 
-        <div class="flex flex-wrap">
-          <UFormGroup class="w-full md:w-1/3 p-2" name="email" label="Email">
-            <UInput v-model="form.email" placeholder="Enter email" />
-          </UFormGroup>
-          <UFormGroup class="w-full md:w-1/3 p-2" name="vacancies" label="Vacancies">
-            <UInput v-model="form.vacancies" type="number" placeholder="Available positions" />
-          </UFormGroup>
-          <UFormGroup class="w-full md:w-1/3 p-2" name="address" label="Address">
-            <UInput v-model="form.address" placeholder="Enter Specific Location" />
-          </UFormGroup>
-        </div>
-
-        <UFormGroup name="description" label="Description">
-          <TiptapEditor ref="tiptapEditor" :modelValue="form.description"
-            @update:modelValue="form.description = $event" />
-        </UFormGroup>
-
-        <div v-if="!jobSlug">
-          <!-- Additional job details -->
-          <div class="flex flex-wrap">
-            <UFormGroup class="w-full md:w-1/3 p-2" name="job_type" label="Job Type">
+        <!-- Job Details Section -->
+        <fieldset class="border p-4 rounded-lg">
+          <legend class="text-lg font-semibold px-2">Job Details</legend>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <UFormGroup name="job_type" label="Job Type">
               <USelect v-model="form.job_type" :options="JOB_TYPE_CHOICES" />
             </UFormGroup>
-            <UFormGroup class="w-full md:w-1/3 p-2" name="image" label="Poster">
-              <input type="file" @change="onImageChange" accept="image/*" ref="fileInput" />
+            <UFormGroup name="vacancies" label="Vacancies">
+              <UInput v-model="form.vacancies" type="number" placeholder="Available positions" />
             </UFormGroup>
-            <UFormGroup class="w-full md:w-1/3 p-2" name="work_experience" label="Work Experience">
+            <UFormGroup name="deadline" label="Application Deadline">
+              <UPopover mode="click" :popper="{ placement: 'bottom-start' }">
+                <UInput :value="form.deadline ? formatDate(form.deadline) : ''" placeholder="Select Deadline" readonly>
+                  <template #trailing>
+                    <UIcon name="i-heroicons-calendar" />
+                  </template>
+                </UInput>
+                <template #panel="{ close }">
+                  <DatePicker v-model="form.deadline" @update:model-value="close" />
+                </template>
+              </UPopover>
+            </UFormGroup>
+          </div>
+        </fieldset>
+
+        <!-- Contact Information Section -->
+        <fieldset class="border p-4 rounded-lg">
+          <legend class="text-lg font-semibold px-2">Contact Information</legend>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <UFormGroup name="application_contact" label="Application Contact">
+              <UInput v-model="form.application_contact" placeholder="Email or website" />
+            </UFormGroup>
+            <UFormGroup name="address" label="Address">
+              <UInput v-model="form.address" placeholder="Enter specific location" />
+            </UFormGroup>
+          </div>
+        </fieldset>
+
+        <!-- Job Poster Section -->
+        <fieldset class="border p-4 rounded-lg">
+          <legend class="text-lg font-semibold px-2">Job Poster</legend>
+          <UFormGroup name="image" label="Poster Image">
+            <input type="file" @change="onImageChange" accept="image/*" ref="fileInput" />
+          </UFormGroup>
+          <ImagePreview :imageUrl="imagePreview" />
+        </fieldset>
+
+        <!-- Description Section -->
+        <fieldset class="border p-4 rounded-lg">
+          <legend class="text-lg font-semibold px-2">Job Description</legend>
+          <UFormGroup name="description" label="Description">
+            <TiptapEditor ref="tiptapEditor" :modelValue="form.description"
+              @update:modelValue="form.description = $event" />
+          </UFormGroup>
+        </fieldset>
+
+        <!-- Additional Fields Section -->
+        <UButton v-if="!showMoreFields" @click="showMoreFields = true" class="w-full" color="gray" variant="soft">
+          Load More Fields
+        </UButton>
+
+        <fieldset v-if="showMoreFields" class="border p-4 rounded-lg">
+          <legend class="text-lg font-semibold px-2">Additional Details</legend>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <UFormGroup name="work_experience" label="Work Experience">
               <UInput v-model="form.work_experience" placeholder="Required work experience" />
             </UFormGroup>
-          </div>
-
-          <!-- More additional fields -->
-          <div class="flex flex-wrap">
-            <UFormGroup class="w-full md:w-1/3 p-2" name="website" label="Website">
-              <UInput v-model="form.website" placeholder="Enter website" />
-            </UFormGroup>
-            <UFormGroup class="w-full md:w-1/3 p-2" name="phone" label="Phone">
-              <UInput v-model="form.phone" placeholder="Enter phone" />
-            </UFormGroup>
-            <UFormGroup class="w-full md:w-1/3 p-2" name="work_hours" label="Work Hours">
+            <UFormGroup name="work_hours" label="Work Hours">
               <UInput v-model="form.work_hours" placeholder="Duration of work" />
             </UFormGroup>
-          </div>
-
-          <div class="flex flex-wrap">
-            <UFormGroup class="w-full md:w-1/3 p-2" name="work_hour_type" label="Work Hour Type">
+            <UFormGroup name="work_hour_type" label="Work Hour Type">
               <USelect v-model="form.work_hour_type" :options="WORK_HOUR_CHOICES" />
             </UFormGroup>
-            <UFormGroup class="w-full md:w-1/3 p-2" name="min_salary" label="Min Salary">
+            <UFormGroup name="min_salary" label="Min Salary">
               <UInput v-model="form.min_salary" type="number" placeholder="Minimum salary" />
             </UFormGroup>
-            <UFormGroup class="w-full md:w-1/3 p-2" name="max_salary" label="Max Salary">
+            <UFormGroup name="max_salary" label="Max Salary">
               <UInput v-model="form.max_salary" type="number" placeholder="Maximum salary" />
             </UFormGroup>
-          </div>
-
-          <div class="flex flex-wrap">
-            <UFormGroup class="w-full md:w-1/2 p-2" name="salary_type" label="Salary Type">
+            <UFormGroup name="salary_type" label="Salary Type">
               <USelect v-model="form.salary_type" :options="SALARY_TYPE_CHOICES" />
             </UFormGroup>
-            <UFormGroup class="w-full md:w-1/2 p-2" name="currency" label="Currency">
+            <UFormGroup name="currency" label="Currency">
               <USelect v-model="form.currency" :options="CURRENCY_CHOICES" />
             </UFormGroup>
           </div>
-        </div>
+        </fieldset>
 
-        <ImagePreview :imageUrl="imagePreview" />
-
-        <div class="pt-4">
-          <UButton type="submit" :disabled="submitting">
-            {{ jobSlug ? 'Update' : 'Submit' }}
-          </UButton>
-          <UButton variant="outline" class="ml-2" @click="clearForm">
+        <!-- Form Actions -->
+        <div class="flex justify-end space-x-2">
+          <UButton variant="outline" @click="clearForm">
             Clear
           </UButton>
+          <UButton type="submit" color="primary" :loading="submitting">
+            {{ jobSlug ? 'Update' : 'Submit' }}
+          </UButton>
         </div>
-        <p v-if="successMessage">{{ successMessage }}</p>
-        <p v-if="errorMessage">{{ errorMessage }}</p>
-      </div>
-    </form>
-  </UCard>
+      </form>
+
+      <UAlert v-if="errorMessage" color="red" variant="soft" icon="i-heroicons-exclamation-circle" class="mb-4"
+        title="Error!" :description="errorMessage" />
+      <UAlert v-if="successMessage" color="green" variant="soft" icon="i-heroicons-check-circle" class="mb-4"
+        title="Success!" :description="successMessage" />
+
+    </UCard>
+  </div>
+
 
   <UModal v-model="isModalOpen">
     <UCard>
@@ -125,6 +161,7 @@
       <LocationForm v-if="activeModal === 'location'" @location-added="handleLocationAdded" />
     </UCard>
   </UModal>
+
 </template>
 
 <script setup lang="ts">
@@ -137,6 +174,7 @@ import { useCategoryStore } from '~/store/categories'
 import { useLocationStore } from '~/store/locations'
 import { useAccountStore } from '~/store/accounts'
 import { useRouter, useRoute } from 'vue-router'
+import DatePicker from '~/components/date-picker.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -163,6 +201,7 @@ const submitting = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
 const showDetails = ref(false)
+const showMoreDetails = ref(false)
 const imagePreview = ref<string | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 
@@ -204,14 +243,22 @@ const schema = z.object({
   company: z.object({ label: z.string(), value: z.number() }).nullable(),
   description: z.string().min(26, 'Must be at least 26 characters'),
   category: z.object({ label: z.string(), value: z.number() }).nullable(),
-  location: z.object({ label: z.string(), value: z.number() }).nullable(),  
+  location: z.object({ label: z.string(), value: z.number() }).nullable(),
   job_type: z.enum(JOB_TYPE_CHOICES.map(choice => choice.value)).optional().nullish().or(z.literal('')),
   image: z.any().optional().refine(
     (val) => !val || (typeof File !== 'undefined' && val instanceof File),
     'Must be a File object'
   ),
   address: z.string().optional().nullish().or(z.literal('')),
-  email: z.string().email('Invalid email'),
+  application_contact: z.string().refine(
+    (value) => {
+      if (!value) return true; // Allow empty value if the field is optional
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      return emailRegex.test(value) || urlRegex.test(value);
+    },
+    { message: "Must be a valid email address or URL" }
+  ),
   website: z.string().url('Invalid URL').optional().nullish().or(z.literal('')),
   phone: z.string().optional().nullish().or(z.literal('')),
   vacancies: z.number().int('Must be an integer').positive('Must be positive').optional().nullish().or(z.literal('')),
@@ -222,6 +269,7 @@ const schema = z.object({
   max_salary: z.number().positive('Must be positive').optional().nullish().or(z.literal('')),
   salary_type: z.enum(SALARY_TYPE_CHOICES.map(choice => choice.value)).optional().nullish().or(z.literal('')),
   currency: z.enum(CURRENCY_CHOICES.map(choice => choice.value)).optional().nullish().or(z.literal('')),
+  deadline: z.date().optional().nullish(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -235,7 +283,7 @@ const form = reactive<FormData>({
   job_type: '',
   image: undefined,
   address: '',
-  email: '',
+  application_contact: '',
   website: '',
   phone: '',
   vacancies: '',
@@ -246,6 +294,7 @@ const form = reactive<FormData>({
   max_salary: '',
   salary_type: '',
   currency: '',
+  deadline: null,
 })
 
 const onImageChange = (e: Event) => {
@@ -256,6 +305,14 @@ const onImageChange = (e: Event) => {
       imagePreview.value = URL.createObjectURL(target.files[0])
     }
   }
+}
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
 }
 
 const modalTitle = computed(() => {
@@ -291,6 +348,16 @@ const locationOptions = computed(() => {
   }))
 })
 
+const showForm = ref(false)
+const showMoreFields = ref(false)
+
+const toggleForm = () => {
+  showForm.value = !showForm.value
+  if (!showForm.value) {
+    clearForm()
+  }
+}
+
 const openModal = (type: 'company' | 'category' | 'location') => {
   activeModal.value = type
   isModalOpen.value = true
@@ -300,62 +367,69 @@ const checkAuth = () => {
   if (!accountStore.isLoggedIn) {
     router.push('/login')
   } else {
-    showDetails.value = true
+    // showDetails.value = true
+    showForm.value = true
   }
 }
 
+
+const formatDateForServer = (date: Date | null): string | null => {
+  if (!date) return null;
+  return date.toISOString().split('T')[0]; // This will return the date in YYYY-MM-DD format
+}
+
 const onSubmit = async () => {
-  submitting.value = true
-  errorMessage.value = ''
-  successMessage.value = ''
+  submitting.value = true;
+  errorMessage.value = '';
+  successMessage.value = '';
 
   try {
-    const validatedData = await schema.parseAsync(form)
+    const validatedData = await schema.parseAsync(form);
 
     const apiData = {
       ...validatedData,
       company: validatedData.company?.value,
       category: validatedData.category?.value,
       location: validatedData.location?.value,
-    }
+      deadline: formatDateForServer(validatedData.deadline),
+    };
 
-    console.log('Data to be sent to API:', apiData)
+    console.log('Data to be sent to API:', apiData);
 
-    const formData = new FormData()
+    const formData = new FormData();
 
     Object.entries(apiData).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
-        formData.append(key, value)
+        formData.append(key, value);
       }
-    })
+    });
 
-    const newJob = await jobStore.createJob(formData)
+    const newJob = await jobStore.createJob(formData);
 
-    successMessage.value = 'Job created successfully'
-    emit('jobCreated', newJob)
+    successMessage.value = 'Job created successfully';
+    emit('jobCreated', newJob);
 
-    clearForm()
+    clearForm();
 
     setTimeout(() => {
-      successMessage.value = ''
-    }, 5000)
+      successMessage.value = '';
+    }, 5000);
   } catch (error) {
-    console.error('Validation or submission error:', error)
+    console.error('Validation or submission error:', error);
     if (error instanceof z.ZodError) {
-      errorMessage.value = error.issues.map(issue => `${issue.path.join('.')} - ${issue.message}`).join('\n')
+      errorMessage.value = error.issues.map(issue => `${issue.path.join('.')} - ${issue.message}`).join('\n');
     } else if (error.response && error.response.data) {
       const serverErrors = Object.entries(error.response.data)
         .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
-        .join('\n')
-      errorMessage.value = `Server validation failed:\n${serverErrors}`
+        .join('\n');
+      errorMessage.value = `Server validation failed:\n${serverErrors}`;
     } else {
-      errorMessage.value = 'Failed to create Job'
+      errorMessage.value = 'Failed to create Job';
     }
   } finally {
-    submitting.value = false
+    submitting.value = false;
   }
-}
-
+};
 
 const fetchJobDetails = async () => {
   if (props.jobSlug) {
@@ -375,12 +449,32 @@ const fetchJobDetails = async () => {
         form.location = { label: jobStore.job.get_location, value: jobStore.job.location }
       }
 
-      showDetails.value = true
+      // showDetails.value = true
+      showForm.value = true
+      showMoreDetails.value = true
     }
   } else {
     clearForm()
   }
 }
+
+const clearForm = () => {
+  Object.keys(form).forEach(key => {
+    form[key as keyof FormData] = null as any
+  })
+  form.title = ''
+  form.description = ''
+  form.deadline = null
+  // showDetails.value = false
+  showForm.value = false
+  showMoreDetails.value = false
+  if (tiptapEditor.value?.editor) {
+    tiptapEditor.value.editor.commands.clearContent()
+  }
+  errorMessage.value = ''
+  successMessage.value = ''
+}
+
 
 const handleCompanyAdded = async () => {
   await companyStore.fetchCompanies()
@@ -401,18 +495,6 @@ const handleLocationAdded = async () => {
   isModalOpen.value = false
   const addedLocation = locations.value[locations.value.length - 1]
   form.location = { label: addedLocation.name, value: addedLocation.id }
-}
-
-const clearForm = () => {
-  Object.keys(form).forEach(key => {
-    form[key] = null
-  })
-  form.title = ''
-  form.description = ''
-  showDetails.value = false
-  if (tiptapEditor.value?.editor) {
-    tiptapEditor.value.editor.commands.clearContent()
-  }
 }
 
 watch(() => props.jobSlug, fetchJobDetails, { immediate: true })
