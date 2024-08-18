@@ -53,6 +53,9 @@ export default defineNuxtConfig({
     "@nuxtjs/sitemap",
     "@nuxtjs/robots"
   ],
+  // plugins: [
+  //   '~/plugins/auth.js'
+  // ],
   tiptap: {
     prefix: 'Tiptap',
     lowlight: {

@@ -92,7 +92,7 @@
                     :color="job.days_left > 0 ? 'primary' : 'red'" :variant="job.days_left > 0 ? 'solid' : 'soft'"
                     @click="handleApply(job)" :disabled="loading || job.days_left <= 0">
                   </UButton>
-                  <UButton v-if="job.get_user === user.email" @click="$emit('editJob', job.slug)" color="yellow"
+                  <UButton v-if="user && job.get_user === user.email" @click="$emit('editJob', job.slug)" color="yellow"
                     size="sm" icon="i-heroicons-pencil-square">
                     Edit
                   </UButton>
@@ -131,9 +131,12 @@ import { storeToRefs } from 'pinia'
 
 const accountStore = useAccountStore()
 const jobStore = useJobStore()
-const { user } = storeToRefs(accountStore)
+// const { user } = storeToRefs(accountStore)
+
 const refreshing = ref(false)
 const router = useRouter()
+
+const user = computed(() => accountStore.user)
 
 const showModal = ref(false)
 const selectedJob = ref(null)
@@ -168,6 +171,7 @@ onMounted(async () => {
   await accountStore.fetchCurrentUser()
 })
 
+
 const getJobBgClass = (job) => {
   if (job.days_left === null) {
     return 'bg-gray-500';
@@ -181,7 +185,4 @@ const getJobBgClass = (job) => {
     return 'bg-green-500';
   }
 }
-
-
-
 </script>

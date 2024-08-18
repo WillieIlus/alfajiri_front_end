@@ -54,6 +54,47 @@ export const useAccountStore = defineStore('account', {
       }
     },
 
+    async fetchProfile() {
+      await this.refreshTokenIfNeeded();
+      try {
+        const response = await fetch(`${BASE_URL}/accounts/profile/`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          }
+        });
+        const data = await response.json();
+        this.user = data;
+      } catch (error) {
+        console.error('Failed to fetch profile', error);
+        throw error;
+      }
+    },
+
+    async updateProfile(profileData) {
+      const accountStore = useAccountStore()
+      const token = accountStore.token
+      try {
+        const formData = new FormData();
+        for (const key in profileData) {
+          formData.append(key, profileData[key]);
+        }
+
+        const response = await fetch(`${BASE_URL}/accounts/profile/update/`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          },
+          body: formData,
+        });
+        const data = await response.json();
+        this.user = { ...this.user, ...data };
+      } catch (error) {
+        console.error('Failed to update profile', error);
+        throw error;
+      }
+    },
+
     async fetchCurrentUser() {
       try {
         const response = await fetch(`${BASE_URL}/accounts/users/me/`, {
@@ -71,69 +112,27 @@ export const useAccountStore = defineStore('account', {
       }
     },
 
-    async updateUser(userData) {
-      this.loading = true
-      try {
-        const response = await fetch('/api/user/profile', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
-        })
-        if (!response.ok) throw new Error('Failed to update user profile')
-        this.user = await response.json()
-      } catch (error) {
-        this.error = error.message
-        throw error
-      } finally {
-        this.loading = false
-      }
-    },
-
     async fetchJobs() {
       const jobStore = useJobStore();
       await jobStore.fetchJobs();
     },
 
-    async updateUser(userData) {
-      try {
-        this.loading = true;
-        this.error = null;
+    isTokenExpired() {
+      if (!this.token) return true;
+      const base64Url = this.token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
 
-        let body;
-        let headers = {
-          'Authorization': `Bearer ${this.token}`
-        };
+      const { exp } = JSON.parse(jsonPayload);
+      const currentTime = Date.now() / 1000;
+      return exp < currentTime;
+    },
 
-        if (userData instanceof FormData) {
-          body = userData;
-        } else {
-          body = JSON.stringify(userData);
-          headers['Content-Type'] = 'application/json';
-        }
-
-        const response = await fetch(`${BASE_URL}/accounts/me/`, {
-          method: 'PATCH',
-          headers: headers,
-          body: body,
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(JSON.stringify(errorData));
-        }
-
-        const updatedUser = await response.json();
-        this.user = updatedUser;
-        this.token = updatedUser.token;
-        return updatedUser;
-      } catch (error) {
-        this.error = error.message;
-        console.error('Error updating user:', error);
-        throw error;
-      } finally {
-        this.loading = false;
+    async refreshTokenIfNeeded() {
+      if (this.isTokenExpired()) {
+        await this.refreshToken();
       }
     },
 
