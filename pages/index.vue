@@ -28,7 +28,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useSeoMeta } from '~/composables/useSeoMeta'
+// import { useSeoMeta } from '~/composables/useSeoMeta'
 import { useJobStore } from '~/store/jobs'
 import { useCategoryStore } from '~/store/categories'
 import { useLocationStore } from '~/store/locations'
@@ -57,10 +57,6 @@ const incrementItemsPerPage = () => {
   jobStore.itemsPerPage += 10
 }
 
-// const hasMoreItems = computed(() => {
-//   return jobStore.itemsPerPage < jobStore.totalJobs
-// })
-
 const fetchJobs = async () => {
   await jobStore.fetchJobs()
 }
@@ -68,16 +64,6 @@ const fetchJobs = async () => {
 const editJob = (jobSlug) => {
   currentJobSlug.value = jobSlug
 }
-
-// const handleJobCreated = async () => {
-//   await fetchJobs()
-//   currentJobSlug.value = null
-// }
-
-// const handleJobUpdated = async () => {
-//   await fetchJobs()
-//   currentJobSlug.value = null
-// }
 
 const handleJobCreated = async () => {
   await performSearch()
@@ -150,15 +136,43 @@ onMounted(async () => {
   await locationStore.fetchLocations()
 })
 
-const metaDescription = computed(() => {
-  return `Find the latest job opportunities on Alfajirijobs. Browse through more than 93,178+ job listings in various categories and locations.`
-})
 
-useSeoMeta({
-  title: 'Latest Job Listings - Alfajirijobs',
-  description: metaDescription.value,
-  image: 'https://alfajirijobs.com/og-image.jpg',
-  url: 'https://alfajirijobs.com'
+// useSeoMeta({
+//   title: 'Latest Job Listings - Alfajirijobs',
+//   description: metaDescription.value,
+//   image: 'https://alfajirijobs.com/og-image.jpg',
+//   url: 'https://alfajirijobs.com'
+// })
+
+// const metaDescription = computed(() => {
+//   return `Find the latest job opportunities on Alfajirijobs. Browse through more than 93,178+ job listings in various categories and locations.`
+// })
+
+const title = 'Latest Job Listings - Alfajirijobs'
+const url = 'https://alfajirijobs.com'
+const imageUrl = 'https://alfajirijobs.com/og-image.jpg'
+
+// useSeoMeta({
+//   title: title,
+//   description: metaDescription.value,
+//   ogTitle: title,
+//   ogDescription: metaDescription,
+//   ogImage: imageUrl,
+//   ogUrl: url,
+//   ogType: 'website',
+//   twitterCard: 'summary_large_image',
+//   twitterTitle: title,
+//   twitterDescription: metaDescription,
+//   twitterImage: imageUrl,
+// })
+
+useHead({
+  htmlAttrs: {
+    lang: 'en'
+  },
+  link: [
+    { rel: 'canonical', href: url }
+  ]
 })
 
 </script>

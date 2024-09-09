@@ -22,7 +22,7 @@ const updateProfile = async () => {
     emit('close')
   } catch (error) {
     console.error('Failed to update profile:', error)
-    // You might want to show an error message here
+    // show an error message here
   }
 }
 </script>

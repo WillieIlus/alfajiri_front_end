@@ -15,6 +15,19 @@ export const useAccountStore = defineStore('account', {
     isLoggedIn: (state) => !!state.token,
   },
   actions: {
+    async handleError(action) {
+      this.loading = true
+      this.error = null
+      try {
+        return await action()
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : String(error)
+        console.error('An error occurred:', this.error)
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
     async signup(userData) {
       try {
         const response = await fetch(`${BASE_URL}/accounts/users/`, {
@@ -54,48 +67,85 @@ export const useAccountStore = defineStore('account', {
       }
     },
 
-    async fetchProfile() {
-      await this.refreshTokenIfNeeded();
+    async updateProfile(data: profileData) {
+      await this.handleError(async() => {
+        
+      this.loading = true;
+      this.error = null;
       try {
+        console.log('Updating profile...');
+        const response = await fetch(`${BASE_URL}/accounts/profile/update/`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          },
+          body: data,
+        });
+
+        console.log('Update response status:', response.status);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Profile update failed:', response.status, errorData);
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Profile update data received:', data);
+        this.$patch((state) => {
+          state.user = { ...state.user, ...data };
+        });
+
+        console.log('Updated user state:', this.user);
+      } catch (error) {
+        console.error('Failed to update profile', error);
+        this.error = error.message;
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    })
+    },
+
+    // Make sure fetchProfile is similarly structured
+    async fetchProfile() {
+      this.loading = true;
+      this.error = null;
+      try {
+        console.log('Fetching profile...');
         const response = await fetch(`${BASE_URL}/accounts/profile/`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${this.token}`
           }
         });
-        const data = await response.json();
-        this.user = data;
-      } catch (error) {
-        console.error('Failed to fetch profile', error);
-        throw error;
-      }
-    },
 
-    async updateProfile(profileData) {
-      const accountStore = useAccountStore()
-      const token = accountStore.token
-      try {
-        const formData = new FormData();
-        for (const key in profileData) {
-          formData.append(key, profileData[key]);
+        console.log('Fetch response status:', response.status);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Profile fetch failed:', response.status, errorData);
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
 
-        const response = await fetch(`${BASE_URL}/accounts/profile/update/`, {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${this.token}`
-          },
-          body: formData,
-        });
         const data = await response.json();
-        this.user = { ...this.user, ...data };
+        console.log('Profile data received:', data);
+
+        // Use reactive update
+        this.$patch({ user: data });
+
+        console.log('Updated user state:', this.user);
       } catch (error) {
-        console.error('Failed to update profile', error);
+        console.error('Failed to fetch profile', error);
+        this.error = error.message;
         throw error;
+      } finally {
+        this.loading = false;
       }
     },
 
     async fetchCurrentUser() {
+      this.loading = true;
       try {
         const response = await fetch(`${BASE_URL}/accounts/users/me/`, {
           method: 'GET',
@@ -104,11 +154,16 @@ export const useAccountStore = defineStore('account', {
             'Authorization': `Bearer ${this.token}`
           }
         });
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
         const data = await response.json();
         this.user = data;
       } catch (error) {
         console.error('Failed to fetch current user', error);
-        throw error;
+        this.error = error.message;
+      } finally {
+        this.loading = false;
       }
     },
 

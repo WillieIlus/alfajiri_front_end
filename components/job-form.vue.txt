@@ -475,6 +475,7 @@ const clearForm = () => {
   successMessage.value = ''
 }
 
+
 const handleCompanyAdded = async () => {
   await companyStore.fetchCompanies()
   isModalOpen.value = false

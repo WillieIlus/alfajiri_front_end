@@ -76,6 +76,7 @@ const modalTitle = computed(() => {
     case 'login': return 'login'
     case 'signup': return 'signup'
     default: return ''
+    
   }
 })
 

@@ -72,12 +72,12 @@ export default defineNuxtConfig({
         '/admin/**'
       ]
     },
-    '@nuxtjs/robots': {
-      rules: {
-        UserAgent: '*',
-        Allow: '/',
-        Sitemap: 'https://alfajirijobs.com/sitemap.xml'
-      }
-    },
+  },
+  '@nuxtjs/robots': {
+    rules: {
+      UserAgent: '*',
+      Allow: '/',
+      Sitemap: 'https://alfajirijobs.com/sitemap.xml'
+    }
   },
 })

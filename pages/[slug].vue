@@ -56,18 +56,50 @@ watch(job, (newJob) => {
   }
 })
 
-
-const metaDescription = computed(() => {
-  if (job.value) {
-    return `${job.value.title} - ${job.value.company} - ${job.value.location}. ${job.value.description.substring(0, 150)}...`
-  }
-  return 'Find your next job opportunity with Alfajirijobs.'
-})
-
 const canonicalUrl = computed(() => {
   return `https://alfajirijobs.com/jobs/${route.params.slug}`
 })
 
+const baseUrl = 'https://alfajirijobs.com'
+const defaultImage = `${baseUrl}/og-image.jpg`
 
+const metaTitle = computed(() => job.value?.title ? `${job.value.title} - Alfajirijobs` : 'Job Details - Alfajirijobs')
+const metaDescription = computed(() => job.value?.description ? `${job.value.description.substring(0, 160)}...` : 'Find the latest job opportunities on Alfajirijobs.')
+const metaUrl = computed(() => job.value?.slug ? `${baseUrl}/jobs/${job.value.slug}` : baseUrl)
+const metaImage = computed(() => job.value?.image || defaultImage)
+
+watch(() => job.value, () => {
+  updateMetadata()
+})
+
+const updateMetadata = () => {
+  useSeoMeta({
+    title: metaTitle.value,
+    description: metaDescription.value,
+    ogTitle: metaTitle.value,
+    ogDescription: metaDescription.value,
+    ogImage: metaImage.value,
+    ogUrl: metaUrl.value,
+    ogType: 'article',
+    twitterCard: 'summary_large_image',
+    twitterTitle: metaTitle.value,
+    twitterDescription: metaDescription.value,
+    twitterImage: metaImage.value,
+  })
+
+  useHead({
+    link: [
+      { rel: 'canonical', href: metaUrl.value }
+    ]
+  })
+}
+
+onMounted(async () => {
+  await fetchJob(route.params.slug)
+  updateMetadata()
+  if (job.value && job.value.category) {
+    await fetchJobsByCategory(job.value.category.slug)
+  }
+})
 
 </script>
