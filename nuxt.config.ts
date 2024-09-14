@@ -18,14 +18,9 @@ export default defineNuxtConfig({
       ],
     },
   },
-  modules: [
-    "@nuxt/ui",
-    "nuxt-tiptap-editor",
-    '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
-    "@stefanobartoletti/nuxt-social-share",
-    'nuxt-seo-kit'
-  ],
+  modules: ["@nuxt/ui", "nuxt-tiptap-editor", '@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt', "@stefanobartoletti/nuxt-social-share", 
+    // 'nuxt-seo-kit', 
+    '@nuxtjs/seo'],
   runtimeConfig: {
     "public": {
       "siteUrl": "https://alfajirijobs.com",
