@@ -18,7 +18,7 @@ const props = defineProps({
   },
   image: {
     type: String,
-    default: 'assets/images/Banner (1)-03.jpg',
+    default: '/assets/images/Banner (1)-03.jpg',
   },
   type: {
     type: String,
