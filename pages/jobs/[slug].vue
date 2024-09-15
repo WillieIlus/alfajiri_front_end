@@ -1,4 +1,11 @@
 <template>
+    <SeoMeta 
+      :title="job.title"
+      :description="job.description"
+      :image="job.image"
+      :slug="`jobs/${job.slug}`"
+      type="article"
+    />
   <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
   <CustomContainer>
     <div class="flex gap-8">

@@ -28,31 +28,18 @@ export default defineNuxtConfig({
     url: 'https://alfajirijobs.com',
     name: 'Alfajiri Jobs',
     description: "Find the best jobs in Kenya first on Alfajiri Jobs. As the name 'Alfajiri' (Swahili for 'Early Morning') suggests, get your job listings early and be the first to apply. The early bird catches the worm! Explore job vacancies, career opportunities, employment listings, and job openings across various industries.",
-    default: 'en-AU'
-
+    default: 'en-AU',
+    twitter: {
+      handle: '@AlfajiriJobs',
+      site: '@AlfajiriJobs',
+      cardType: 'summary_large_image',
+    },
+    meta: {
+      ogTitle: 'Alfajiri Jobs',
+      ogDescription: "Find the best jobs in Kenya first on Alfajiri Jobs. As the name 'Alfajiri' (Swahili for 'Early Morning') suggests, get your job listings early and be the first to apply. The early bird catches the worm! Explore job vacancies, career opportunities, employment listings, and job openings across various industries.",
+      ogUrl: 'https://alfajirijobs.com',
+    },
   },
-  // runtimeConfig: {
-  //   "public": {
-  //     "siteUrl": "",
-  //     "siteName": "",
-  //     "siteDescription": "Discover the best job opportunities in Kenya.",
-  //     "language": 
-  //   }
-  // },
-  // seo: {
-  //   "title": "Alfajiri Jobs",
-  //   "titleTemplate": "%s - AlfajiriJobs",
-  //   "description": "Find the best jobs in Kenya first on Alfajiri Jobs. As the name 'Alfajiri' (Swahili for 'Early Morning') suggests, get your job listings early and be the first to apply. The early bird catches the worm! Explore job vacancies, career opportunities, employment listings, and job openings across various industries.",
-  //   "openGraph": {
-  //     "type": "website",
-  //     "url": "https://alfajirijobs.com",
-  //     "siteName": "Alfajiri Jobs"
-  //   },
-  //   "twitter": {
-  //     "card": "summary_large_image",
-  //     "site": "@alfajirijobs"
-  //   }
-  // },
   tiptap: {
     prefix: 'Tiptap',
     lowlight: {

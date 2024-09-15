@@ -1,8 +1,10 @@
 <!-- components/SeoMeta.vue -->
 <script setup>
 import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
 const route = useRoute()
+const runtimeConfig = useRuntimeConfig()
 
 const props = defineProps({
   title: {
@@ -16,7 +18,7 @@ const props = defineProps({
   },
   image: {
     type: String,
-    default: '/default-image.jpg',
+    default: 'assets/images/Banner (1)-03.jpg',
   },
   type: {
     type: String,
@@ -24,13 +26,25 @@ const props = defineProps({
   },
   twitterSite: {
     type: String,
-    default: '@AlfajiriJobs', // Assuming this is your Twitter handle
-  }
+    default: '@AlfajiriJobs',
+  },
+  slug: {
+    type: String,
+    default: '',
+  },
+  customUrl: {
+    type: String,
+    default: '',
+  },
 })
 
-const runtimeConfig = useRuntimeConfig()
-
 const fullPath = computed(() => {
+  if (props.customUrl) {
+    return `${runtimeConfig.public.siteUrl}${props.customUrl}`
+  }
+  if (props.slug) {
+    return `${runtimeConfig.public.siteUrl}/${props.slug}`
+  }
   return `${runtimeConfig.public.siteUrl}${route.fullPath}`
 })
 
@@ -39,14 +53,14 @@ useSeoMeta({
   ogTitle: () => props.title,
   description: () => props.description,
   ogDescription: () => props.description,
-  ogImage: () => props.image,
+  ogImage: () => `${runtimeConfig.public.siteUrl}${props.image}`,
   ogUrl: () => fullPath.value,
   ogType: () => props.type,
   twitterCard: 'summary_large_image',
   twitterSite: () => props.twitterSite,
   twitterTitle: () => props.title,
   twitterDescription: () => props.description,
-  twitterImage: () => props.image,
+  twitterImage: () => `${runtimeConfig.public.siteUrl}${props.image}`,
   canonical: () => fullPath.value,
 })
 </script>

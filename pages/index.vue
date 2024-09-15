@@ -1,5 +1,10 @@
 <template>
   <div>
+    <SeoMeta 
+      title="Early Alfajirijobs"
+      description="Learn more about Alfajirijobs and our mission to connect job seekers with employers in Kenya."
+      customUrl="/"
+    />
     <Hero />
     <CustomContainer>
       <div class="flex gap-[28px]">

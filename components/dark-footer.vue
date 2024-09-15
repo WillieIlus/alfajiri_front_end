@@ -39,7 +39,7 @@
               <UIcon name="i-fa6-brands:instagram" class="text-gray-200" dynamic />
             </div>
           </nuxt-link>
-          <nuxt-link to="https://x.com">
+          <nuxt-link to="https://x.com/AlfajiriJobs">
             <div class="bg-gray-800 py-2 px-3 rounded-full">
               <UIcon name="i-fa6-brands:x-twitter" class="text-gray-200" dynamic />
             </div>

@@ -1,11 +1,11 @@
 <template>
-  <SeoMeta 
-    :title="metaTitle"
-    :description="metaDescription"
-    :image="metaImage"
-    :type="pageType"
-    :url="metaUrl"
-  />
+      <SeoMeta 
+      :title="job.title"
+      :description="job.description"
+      :image="job.image"
+      :slug="`${job.slug}`"
+      type="article"
+    />
   <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
   <CustomContainer>
     <div class="flex flex-col lg:flex-row gap-8">
@@ -43,11 +43,6 @@ const breadcrumbs = computed(() => [
 ])
 
 const crumbTitle = computed(() => job.value?.title || 'Job Details')
-
-const metaTitle = computed(() => job.value?.title ? `${job.value.title} - Alfajirijobs` : 'Job Details - Alfajirijobs')
-const metaDescription = computed(() => job.value?.description ? `${job.value.description.substring(0, 160)}...` : 'Find the latest job opportunities on Alfajirijobs.')
-const metaUrl = computed(() => job.value?.slug ? `${baseUrl}/jobs/${job.value.slug}` : baseUrl)
-const metaImage = computed(() => job.value?.image || defaultImage)
 
 const fetchJobData = async () => {
   await jobStore.fetchJob(route.params.slug)
