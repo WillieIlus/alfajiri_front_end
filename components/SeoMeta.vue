@@ -48,19 +48,26 @@ const fullPath = computed(() => {
   return `${runtimeConfig.public.siteUrl}${route.fullPath}`
 })
 
+const fullImagePath = computed(() => {
+  if (props.image.startsWith('http')) {
+    return props.image
+  }
+  return `${runtimeConfig.public.siteUrl}${props.image}`
+})
+
 useSeoMeta({
   title: () => props.title,
   ogTitle: () => props.title,
   description: () => props.description,
   ogDescription: () => props.description,
-  ogImage: () => `${runtimeConfig.public.siteUrl}${props.image}`,
+  ogImage: () => fullImagePath.value,
   ogUrl: () => fullPath.value,
   ogType: () => props.type,
   twitterCard: 'summary_large_image',
   twitterSite: () => props.twitterSite,
   twitterTitle: () => props.title,
   twitterDescription: () => props.description,
-  twitterImage: () => `${runtimeConfig.public.siteUrl}${props.image}`,
+  twitterImage: () => fullImagePath.value,
   canonical: () => fullPath.value,
 })
 </script>

@@ -1,9 +1,9 @@
 <template>
-    <SeoMeta 
-      :title="job.title"
-      :description="job.description"
-      :image="job.image"
-      :slug="`jobs/${job.slug}`"
+   <SeoMeta v-if="job"
+      :title="job.title || 'Job Listing'"
+      :description="job.description || 'View this job listing on Alfajiri Jobs'"
+      :image="job.image || '/assets/images/Banner (1)-03.jpg'"
+      :slug="`jobs/${job.slug || ''}`"
       type="article"
     />
   <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
