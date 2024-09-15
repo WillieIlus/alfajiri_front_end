@@ -18,31 +18,41 @@ export default defineNuxtConfig({
       ],
     },
   },
-  modules: ["@nuxt/ui", "nuxt-tiptap-editor", '@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt', "@stefanobartoletti/nuxt-social-share", 
-    // 'nuxt-seo-kit', 
+  modules: ["@nuxt/ui",
+    "nuxt-tiptap-editor",
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
+    "@stefanobartoletti/nuxt-social-share",
     '@nuxtjs/seo'],
-  runtimeConfig: {
-    "public": {
-      "siteUrl": "https://alfajirijobs.com",
-      "siteName": "Alfajiri Jobs",
-      "siteDescription": "Discover the best job opportunities in Kenya.",
-      "language": "en-AU"
-    }
+  site: {
+    url: 'https://alfajirijobs.com',
+    name: 'Alfajiri Jobs',
+    description: "Find the best jobs in Kenya first on Alfajiri Jobs. As the name 'Alfajiri' (Swahili for 'Early Morning') suggests, get your job listings early and be the first to apply. The early bird catches the worm! Explore job vacancies, career opportunities, employment listings, and job openings across various industries.",
+    default: 'en-AU'
+
   },
-  seo: {
-    "title": "Alfajiri Jobs",
-    "titleTemplate": "%s - AlfajiriJobs",
-    "description": "Find the best jobs in Kenya first on Alfajiri Jobs. As the name 'Alfajiri' (Swahili for 'Early Morning') suggests, get your job listings early and be the first to apply. The early bird catches the worm! Explore job vacancies, career opportunities, employment listings, and job openings across various industries.",
-    "openGraph": {
-      "type": "website",
-      "url": "https://alfajirijobs.com",
-      "siteName": "Alfajiri Jobs"
-    },
-    "twitter": {
-      "card": "summary_large_image",
-      "site": "@alfajirijobs"
-    }
-  },
+  // runtimeConfig: {
+  //   "public": {
+  //     "siteUrl": "",
+  //     "siteName": "",
+  //     "siteDescription": "Discover the best job opportunities in Kenya.",
+  //     "language": 
+  //   }
+  // },
+  // seo: {
+  //   "title": "Alfajiri Jobs",
+  //   "titleTemplate": "%s - AlfajiriJobs",
+  //   "description": "Find the best jobs in Kenya first on Alfajiri Jobs. As the name 'Alfajiri' (Swahili for 'Early Morning') suggests, get your job listings early and be the first to apply. The early bird catches the worm! Explore job vacancies, career opportunities, employment listings, and job openings across various industries.",
+  //   "openGraph": {
+  //     "type": "website",
+  //     "url": "https://alfajirijobs.com",
+  //     "siteName": "Alfajiri Jobs"
+  //   },
+  //   "twitter": {
+  //     "card": "summary_large_image",
+  //     "site": "@alfajirijobs"
+  //   }
+  // },
   tiptap: {
     prefix: 'Tiptap',
     lowlight: {
