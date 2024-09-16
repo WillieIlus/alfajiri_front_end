@@ -2,7 +2,7 @@
 <SeoMeta v-if="job"
   :title="job.title || 'Job Listing'"
   :description="sanitizeDescription(job.description) || 'View this job listing on Alfajiri Jobs'"
-  :image="getImagePath(job.image)"
+  :image="fullImagePath(job.image)"
   :slug="job.slug || ''"
   type="article"
 />
