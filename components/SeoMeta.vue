@@ -72,5 +72,7 @@ useSeoMeta({
   twitterImage: () => fullImagePath.value,
   canonical: () => fullPath.value,
   url: () => fullPath.value,
+  articlePublishedTime: () => props.type === 'article' ? new Date().toISOString() : undefined,
+  articleModifiedTime: () => props.type === 'article' ? new Date().toISOString() : undefined,
 })
 </script>

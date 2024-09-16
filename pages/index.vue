@@ -40,6 +40,14 @@ import { useLocationStore } from '~/store/locations'
 import { storeToRefs } from 'pinia'
 import { useDebounceFn } from '@vueuse/core'
 
+defineOgImageComponent('NuxtSeo', {
+  headline: 'Greetings',
+  title: 'Hello Looking for a job',
+  description: 'Find this jobs at the link provided',
+  theme: '#ff0000',
+  colorMode: 'dark',
+})
+
 const categoryStore = useCategoryStore()
 const locationStore = useLocationStore()
 const jobStore = useJobStore()

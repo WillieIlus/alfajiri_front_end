@@ -1,11 +1,11 @@
 <template>
-  <SeoMeta v-if="job"
-    :title="job.title || 'Job Listing'"
-    :description="sanitizeDescription(job.description) || 'View this job listing on Alfajiri Jobs'"
-    :image="getImagePath(job.image)"
-    :slug="job.slug || ''"
-    type="article"
-  />
+<SeoMeta v-if="job"
+  :title="job.title || 'Job Listing'"
+  :description="sanitizeDescription(job.description) || 'View this job listing on Alfajiri Jobs'"
+  :image="getImagePath(job.image)"
+  :slug="job.slug || ''"
+  type="article"
+/>
   <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
   <CustomContainer>
     <div class="flex flex-col lg:flex-row gap-8">
