@@ -62,7 +62,12 @@ useSeoMeta({
   ogTitle: () => props.title,
   description: () => props.description,
   ogDescription: () => props.description,
+  // Explicitly set og:image
   ogImage: () => fullImagePath.value,
+  // Also set these additional OG image properties
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
+  ogImageAlt: () => `Image for ${props.title}`,
   ogUrl: () => fullPath.value,
   ogType: () => props.type,
   twitterCard: 'summary_large_image',
@@ -72,7 +77,5 @@ useSeoMeta({
   twitterImage: () => fullImagePath.value,
   canonical: () => fullPath.value,
   url: () => fullPath.value,
-  articlePublishedTime: () => props.type === 'article' ? new Date().toISOString() : undefined,
-  articleModifiedTime: () => props.type === 'article' ? new Date().toISOString() : undefined,
 })
 </script>

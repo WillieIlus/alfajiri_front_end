@@ -56,12 +56,11 @@ const sanitizeDescription = (desc) => {
   return desc.replace(/<[^>]*>/g, '').substring(0, 160).trim() + '...'
 }
 
-const getImagePath = computed(() => {
-  return (imagePath) => {
-    if (!imagePath) return '/assets/images/Banner (1)-03.jpg'
-    if (imagePath.startsWith('http')) return imagePath
-    return `/assets/images/${imagePath.split('/').pop()}`
+const fullImagePath = computed(() => {
+  if (props.image.startsWith('http')) {
+    return props.image
   }
+  return `${runtimeConfig.public.siteUrl}${image(props.image, { width: 1200, height: 630 })}`
 })
 
 onMounted(fetchJobData)
