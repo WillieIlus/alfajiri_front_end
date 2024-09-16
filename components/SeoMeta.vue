@@ -20,7 +20,7 @@ const props = defineProps({
   },
   image: {
     type: String,
-    default: '/Banner (1)-03.jpg',
+    default: '/assets/images/Banner (1)-03.jpg',
   },
   type: {
     type: String,
@@ -57,23 +57,20 @@ const fullImagePath = computed(() => {
   return image(props.image, { width: 1200, height: 630 })
 })
 
-const sanitizeDescription = (desc) => {
-  return desc.replace(/<[^>]*>/g, '').substring(0, 160).trim() + '...'
-}
-
 useSeoMeta({
   title: () => props.title,
   ogTitle: () => props.title,
-  description: () => sanitizeDescription(props.description),
-  ogDescription: () => sanitizeDescription(props.description),
+  description: () => props.description,
+  ogDescription: () => props.description,
   ogImage: () => fullImagePath.value,
   ogUrl: () => fullPath.value,
   ogType: () => props.type,
   twitterCard: 'summary_large_image',
   twitterSite: () => props.twitterSite,
   twitterTitle: () => props.title,
-  twitterDescription: () => sanitizeDescription(props.description),
+  twitterDescription: () => props.description,
   twitterImage: () => fullImagePath.value,
   canonical: () => fullPath.value,
+  url: () => fullPath.value,
 })
 </script>

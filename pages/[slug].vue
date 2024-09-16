@@ -1,11 +1,11 @@
 <template>
-   <SeoMeta v-if="job"
-      :title="job.title || 'Job Listing'"
-      :description="job.description || 'View this job listing on Alfajiri Jobs'"
-      :image="job.image || '~/assets/images/Banner (1)-03.jpg'"
-      :slug="`${job.slug || ''}`"
-      type="article"
-    />
+  <SeoMeta v-if="job"
+    :title="job.title || 'Job Listing'"
+    :description="sanitizeDescription(job.description) || 'View this job listing on Alfajiri Jobs'"
+    :image="getImagePath(job.image)"
+    :slug="job.slug || ''"
+    type="article"
+  />
   <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
   <CustomContainer>
     <div class="flex flex-col lg:flex-row gap-8">
@@ -50,6 +50,19 @@ const fetchJobData = async () => {
     await jobStore.fetchJobsByCategory(job.value.category.slug)
   }
 }
+
+const sanitizeDescription = (desc) => {
+  if (!desc) return ''
+  return desc.replace(/<[^>]*>/g, '').substring(0, 160).trim() + '...'
+}
+
+const getImagePath = computed(() => {
+  return (imagePath) => {
+    if (!imagePath) return '/assets/images/Banner (1)-03.jpg'
+    if (imagePath.startsWith('http')) return imagePath
+    return `/assets/images/${imagePath.split('/').pop()}`
+  }
+})
 
 onMounted(fetchJobData)
 

@@ -32,6 +32,12 @@ export default defineNuxtConfig({
     '@nuxt/image',
   ],
 
+  runtimeConfig: {
+    public: {
+      siteUrl: 'https://alfajirijobs.com',
+    }
+  },
+
   site: {
     url: 'https://alfajirijobs.com',
     name: 'Alfajiri Jobs',
