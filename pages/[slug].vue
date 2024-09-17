@@ -29,6 +29,8 @@ import { useRoute } from 'vue-router'
 import { useJobStore } from '~/store/jobs'
 import { useRuntimeConfig } from '#app'
 
+import fullImagePath from '~/assets/images/background.jpg'
+
 const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
 const jobStore = useJobStore()
@@ -58,15 +60,6 @@ const sanitizeDescription = (desc) => {
   if (!desc) return ''
   return desc.replace(/<[^>]*>/g, '').substring(0, 160).trim() + '...'
 }
-
-const fullImagePath = computed(() => {
-  if (job.value?.image?.startsWith('http')) {
-    return job.value.image
-  }
-  return job.value?.image 
-    ? `${runtimeConfig.public.siteUrl}${useImage(job.value.image, { width: 1200, height: 630 })}`
-    : defaultImage
-})
 
 onMounted(fetchJobData)
 
