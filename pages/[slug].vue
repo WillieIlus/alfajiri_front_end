@@ -1,11 +1,11 @@
 <template>
-  <SeoMeta v-if="job"
+  <!-- <SeoMeta v-if="job"
     :title="job.title || 'Job Listing'"
     :description="sanitizeDescription(job.description) || 'View this job listing on Alfajiri Jobs'"
     :image="fullImagePath"
     :slug="job.slug || ''"
     type="article"
-  />
+  /> -->
   <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
   <CustomContainer>
     <div class="flex flex-col lg:flex-row gap-8">
