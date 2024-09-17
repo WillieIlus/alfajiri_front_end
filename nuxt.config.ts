@@ -9,20 +9,12 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
     '@nuxt/image',
   ],
-
-  runtimeConfig: {
-    public: {
-      siteUrl: 'https://alfajirijobs.com',
-    }
-  },
-
   tiptap: {
     prefix: 'Tiptap',
     lowlight: {
       theme: 'github-dark',
     },
   },
-
   socialShare: {
     baseUrl: 'https://alfajirijobs.com'
   },

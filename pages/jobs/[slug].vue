@@ -1,12 +1,5 @@
 <template>
-   <SeoMeta v-if="job"
-      :title="job.title || 'Job Listing'"
-      :description="job.description || 'View this job listing on Alfajiri Jobs'"
-      :image="job.image || '/assets/images/Banner (1)-03.jpg'"
-      :slug="`jobs/${job.slug || ''}`"
-      type="article"
-    />
-  <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
+<Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
   <CustomContainer>
     <div class="flex gap-8">
       <div class="flex-1 w-full lg:w-2/3">
