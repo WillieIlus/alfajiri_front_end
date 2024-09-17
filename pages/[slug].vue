@@ -1,11 +1,11 @@
 <template>
-<SeoMeta v-if="job"
-  :title="job.title || 'Job Listing'"
-  :description="sanitizeDescription(job.description) || 'View this job listing on Alfajiri Jobs'"
-  :image="fullImagePath(job.image)"
-  :slug="job.slug || ''"
-  type="article"
-/>
+  <SeoMeta v-if="job"
+    :title="job.title || 'Job Listing'"
+    :description="sanitizeDescription(job.description) || 'View this job listing on Alfajiri Jobs'"
+    :image="fullImagePath"
+    :slug="job.slug || ''"
+    type="article"
+  />
   <Breadcrumbs :title="crumbTitle" :crumbs="breadcrumbs" />
   <CustomContainer>
     <div class="flex flex-col lg:flex-row gap-8">
@@ -23,10 +23,13 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
 import { useJobStore } from '~/store/jobs'
+import { useRuntimeConfig } from '#app'
 
+const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
 const jobStore = useJobStore()
 const { job, loading, error } = storeToRefs(jobStore)
@@ -57,10 +60,12 @@ const sanitizeDescription = (desc) => {
 }
 
 const fullImagePath = computed(() => {
-  if (props.image.startsWith('http')) {
-    return props.image
+  if (job.value?.image?.startsWith('http')) {
+    return job.value.image
   }
-  return `${runtimeConfig.public.siteUrl}${image(props.image, { width: 1200, height: 630 })}`
+  return job.value?.image 
+    ? `${runtimeConfig.public.siteUrl}${useImage(job.value.image, { width: 1200, height: 630 })}`
+    : defaultImage
 })
 
 onMounted(fetchJobData)
