@@ -85,17 +85,18 @@
       </UButton>
 
     </UCard>
+
     <UCard>
       <div class="flex items-center gap-4">
         <p class="font-medium">Share this post:</p>
         <SocialShare v-for="network in ['facebook', 'twitter', 'whatsapp', 'linkedin', 'email']" :key="network"
-          :network="network" :styled="true" :label="false"
-          class="p-2 rounded-full text-white hover:opacity-80 transition-opacity"
-          :url="`https://alfajirijobs.com/${job?.slug}`" :title="job?.title || 'Job Title Unavailable'"
-          :description="sanitizeDescription(job?.truncated_description || '')"
-          :media="(job?.get_company?.logo) ? job.get_company.logo : defaultImage" />
+          :network="network" :url="`https://alfajirijobs.com/${job.slug}`" :title="`Check out this job: ${job.title}`"
+          :description="truncatedDescription" :image="job.image || defaultImage" :styled="true" :label="false"
+          class="p-2 rounded-full text-white hover:opacity-80 transition-opacity" />
       </div>
     </UCard>
+
+
 
 
     <UModal v-model="showModal">
@@ -166,6 +167,16 @@ const onApplicationSubmitted = () => {
   showModal.value = false
   emit('refresh-job-data')
 }
+
+const sanitizeDescription = (desc) => {
+  if (!desc) return ''
+  return desc.replace(/<[^>]*>/g, '').substring(0, 160).trim() + '...'
+}
+
+// Compute the truncated description
+const truncatedDescription = computed(() => {
+  return sanitizeDescription(props.job?.truncated_description || '')
+})
 
 const emit = defineEmits(['refresh-job-data'])
 
