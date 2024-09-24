@@ -51,7 +51,8 @@ export default defineNuxtConfig({
     'nuxt-simple-robots',
     "@stefanobartoletti/nuxt-social-share",
     "@nuxtjs/sitemap",
-    "@nuxtjs/robots"
+    "@nuxtjs/robots",
+    'nuxt-module-feed',
   ],
   // plugins: [
   //   '~/plugins/auth.js'
@@ -66,18 +67,25 @@ export default defineNuxtConfig({
     baseUrl: 'https://alfajirijobs.com'
   },
   sitemap: {
-    siteUrl: 'https://alfajirijobs.com',
-    generateOptions: {
-      exclude: [
-        '/admin/**'
+    hostname: 'https://alfajirijobs.com',
+    gzip: true,
+    routes: async () => {
+      const jobs = await fetchJobs() 
+      return [
+        '/feed.xml',
+        ...jobs.map(job => `/${job.slug}`)
       ]
-    },
-  },
-  '@nuxtjs/robots': {
-    rules: {
-      UserAgent: '*',
-      Allow: '/',
-      Sitemap: 'https://alfajirijobs.com/sitemap.xml'
     }
+  },
+  robots: {
+    UserAgent: '*',
+    Allow: '/',
+    Disallow: '/admin',
+    Sitemap: 'https://alfajirijobs.com/sitemap.xml'
+  },
+  rss: {
+    title: 'Alfajiri Jobs',
+    description: 'Latest jobs and career opportunities',
+    link: 'https://alfajirijobs.com/feed.xml',
   },
 })

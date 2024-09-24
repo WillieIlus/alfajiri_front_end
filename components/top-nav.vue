@@ -1,38 +1,37 @@
 <template>
   <div :class="['top-nav', { 'scrolled': isScrolled }]" :style="navStyle">
     <CustomContainer class="w-full">
-      <div>
-        <div class="flex justify-between items-center">
-          <div class="font-semibold text-lg">
-            <ULink to="/" active-class="text-primary"
-              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-              <img :src="logo" alt="Logo" class="h-8" />
-            </ULink>
-          </div>
-          <div class="flex flex-1 justify-center items-center mx-16 ">
-            <UInput class="w-full" icon="i-heroicons-magnifying-glass-20-solid" size="xl" color="white" trailing
-              placeholder="Search for jobs..." />
-          </div>
-          <!-- user menu -->
+      <div class="flex justify-between items-center">
+        <div id='logo' class="font-semibold text-lg">
+          <ULink to="/" active-class="text-primary"
+            inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+            <img :src="logo" alt="Logo" class="h-8" />
+          </ULink>
+        </div>
 
-
-          <div class="flex flex-col sm:flex-row items-center gap-2">
-            <div v-if="isLoggedIn" class="flex justify-center items-center gap-4">
-              <span class="px-4">Hi <ULink to="/accounts/profile" active-class="text-primary"
-                  inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-                  {{ user?.first_name || 'user' }}</ULink></span>
-              <span>
-                <Logout />
-              </span>
-            </div>
-            <div v-else>
-              <UButton size="md" icon="i-heroicons-user" label="signup" @click="openModal('signup')" class="mr-2" />
-              <UButton size="md" icon="i-heroicons-lock-closed" variant="outline" label="login"
-                @click="openModal('login')" />
-            </div>
-            <ColorMode />
+        <div id='menu' class="flex-auto">
+          <UHorizontalNavigation :links="links" class="flex items-center justify-center">
+            <template #default="{ link }">
+              <span class="group-hover:text-primary relative">{{ link.label }}</span>
+            </template>
+          </UHorizontalNavigation>
+        </div>
+        
+        <div id='usermenu' class="flex items-center gap-2">
+          <div v-if="isLoggedIn" class="flex items-center gap-4">
+            <span class="px-4">Hi <ULink to="/accounts/profile" active-class="text-primary"
+                inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                {{ user?.first_name || 'user' }}</ULink></span>
+            <span>
+              <Logout />
+            </span>
           </div>
-          <!-- end user menu -->
+          <div v-else>
+            <UButton size="md" icon="i-heroicons-user" label="signup" @click="openModal('signup')" class="mr-2" />
+            <UButton size="md" icon="i-heroicons-lock-closed" variant="outline" label="login"
+              @click="openModal('login')" />
+          </div>
+          <ColorMode />
         </div>
       </div>
     </CustomContainer>
@@ -45,7 +44,7 @@
           <img src="assets/images/Logo.png" class="mx-auto h-[24px] block dark:hidden" alt="">
           <img src="assets/images/logo-white.png" class="mx-auto h-[24px] dark:block hidden" alt="">
         </NuxtLink>
-        <h3 class="my-6 text-xl font-semibold">Login</h3>
+        <h3 class="my-6 text-xl font-semibold">{{ modalTitle }}</h3>
       </template>
       <LoginForm v-if="activeModal === 'login'" @login-successful="handleLogin"
         @open-signup-modal="switchToSignupModal" />
@@ -76,7 +75,7 @@ const modalTitle = computed(() => {
     case 'login': return 'login'
     case 'signup': return 'signup'
     default: return ''
-    
+
   }
 })
 

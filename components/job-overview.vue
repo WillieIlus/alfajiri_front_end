@@ -59,17 +59,14 @@
         </div>
       </div>
 
-      <div class="p-4 flex items-start gap-4">
+      <div v-if="job && job.get_company" class="p-4 flex items-start gap-4">
         <UIcon name="i-heroicons-building-office-2" class="text-3xl text-purple-500" />
         <div>
-          <h5 class="font-semibold text-lg">
-            Company:
-          </h5>
-          <p class="text-gray-600">
-            {{ job.get_company?.name || "Not Specified" }}
-          </p>
+          <h5 class="font-semibold text-lg">Company:</h5>
+          <p class="text-gray-600">{{ job?.get_company?.name || "Not Specified" }}</p>
         </div>
       </div>
+
 
       <div class="p-4 flex items-start gap-4">
         <UIcon name="i-heroicons-map-pin" class="text-3xl text-purple-500" />
@@ -86,15 +83,20 @@
         :color="props.job.days_left > 0 ? 'primary' : 'red'" :variant="props.job.days_left > 0 ? 'solid' : 'soft'"
         @click="handleApply" :disabled="loading || props.job.days_left <= 0">
       </UButton>
+
     </UCard>
     <UCard>
       <div class="flex items-center gap-4">
         <p class="font-medium">Share this post:</p>
         <SocialShare v-for="network in ['facebook', 'twitter', 'whatsapp', 'linkedin', 'email']" :key="network"
           :network="network" :styled="true" :label="false"
-          class="p-2 rounded-full text-white hover:opacity-80 transition-opacity" />
+          class="p-2 rounded-full text-white hover:opacity-80 transition-opacity"
+          :url="`https://alfajirijobs.com/${job?.slug}`" :title="job?.title || 'Job Title Unavailable'"
+          :description="sanitizeDescription(job?.truncated_description || '')"
+          :media="(job?.get_company?.logo) ? job.get_company.logo : defaultImage" />
       </div>
     </UCard>
+
 
     <UModal v-model="showModal">
       <UCard>
@@ -112,6 +114,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import defaultImage from '~/assets/images/background.jpg'
 
 const router = useRouter()
 

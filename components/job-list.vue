@@ -15,21 +15,23 @@
         {{ totalJobs }} Job{{ totalJobs !== 1 ? 's' : '' }} you May Like
       </h4>
       <ul class="space-y-6">
-        <li v-for="job in jobs" :key="job.slug">
+        <li v-for="job in jobs" :key="job?.slug">
           <UCard class="shadow-md hover:rounded-lg transition transform hover:scale-105">
             <div class="p-2">
               <div class="flex flex-col md:flex-row gap-6 items-start">
                 <div class="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 overflow-hidden rounded-lg">
-                  <img class="w-full h-full object-cover object-center" :src="job.get_company?.logo || noLogo"
-                    :alt="job.get_company?.name" />
+                  <img class="w-full h-full object-cover object-center" :src="job?.get_company?.logo || noLogo"
+                    :alt="job?.get_company?.name || 'Company Name'" />
                 </div>
                 <div class="flex-grow space-y-4">
                   <div>
-                    <p class="text-sm font-light text-torea-bay-500 dark:text-torea-bay-400">
+                    <NuxtLink :to="`/companies/${job?.get_company?.slug}`"
+                      class="text-sm font-light text-torea-bay-500 dark:text-torea-bay-400">
                       {{ job?.get_company?.name || 'Company Name' }}
-                    </p>
+                    </NuxtLink>
+
                     <h2 class="mt-1 text-xl font-bold text-gray-900 dark:text-white">
-                      <NuxtLink :to="`/${job.slug}`" class="hover:text-blue-600 dark:hover:text-blue-400">
+                      <NuxtLink :to="`/${job?.slug}`" class="hover:text-blue-600 dark:hover:text-blue-400">
                         {{ job?.title || ' ' }}
                       </NuxtLink>
                     </h2>
@@ -92,7 +94,7 @@
                     :color="job.days_left > 0 ? 'primary' : 'red'" :variant="job.days_left > 0 ? 'solid' : 'soft'"
                     @click="handleApply(job)" :disabled="loading || job.days_left <= 0">
                   </UButton>
-                  <UButton v-if="user && job.get_user === user.email" @click="$emit('editJob', job.slug)" color="yellow"
+                  <UButton v-if="user && job.get_user === user.email" @click="$emit('editJob', job?.slug)" color="yellow"
                     size="sm" icon="i-heroicons-pencil-square">
                     Edit
                   </UButton>
